@@ -1,20 +1,14 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import baseApi from "./baseApi";
 
-const p2tWebApi = createApi({
-  reducerPath: "p2tWebApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl: `${import.meta.env.VITE_APP_APIBaseUrl}/AuthDataGet/ExecuteJson/SpP2TWebapi`,
-  }),
+const baseUrl = '/AuthDataGet/ExecuteJson/P2TWebapi'
+
+const p2tWebApi = baseApi.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     downloadCertificate: builder.mutation({
       query: (data) => ({
-        url: "11",
-        method: "POST",
+        url: `${baseUrl}/11`,
         body: data,
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-type": "application/json",
-        },
         providesTags: ["p2tWebApi"],
       }),
     }),

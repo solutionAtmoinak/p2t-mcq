@@ -18,6 +18,9 @@ const LoginPage: React.FC = () => {
   const [searchParams] = useSearchParams()
   const jwtSearchParam = searchParams.get('jwt')
   const tokenSearchParam = searchParams.get('token')
+  const examTypeParam = searchParams.get('examType')
+  const examIdParam = searchParams.get('examId')
+  const packageIdParam = searchParams.get('packageId');
 
   const [loginApi, { isLoading }] = useLoginUserMutation()
   const [authenticateApi, { isLoading: authenticateLoading }] = useAuthenticateUserMutation()
@@ -31,7 +34,6 @@ const LoginPage: React.FC = () => {
     code: "",
   };
 
-  const localToken = localStorage.getItem("token");
 
   useEffect(() => {
     if (getCaptcha.isError) {
@@ -45,54 +47,68 @@ const LoginPage: React.FC = () => {
   }, [getCaptcha]);
 
   useEffect(() => {
-    const jwtToken = jwtSearchParam || tokenSearchParam || "";
+    console.log({ examTypeParam, examIdParam, packageIdParam })
 
-    if (jwtToken) {
-      if (isValidJWT(jwtToken)) {
-        authenticateApi(jwtToken).then((res) => {
-          if (res.data) {
-            const data: ApiResponse = res.data
-            if (data.isSuccess) {
-              localStorage.setItem('token', jwtToken)
-              navigate("/HomePage")
-            } else {
-              navigate('/')
-            }
-          } else {
-            console.log(res.error);
-          }
-        }).catch((err) => {
-          console.log(err);
-        })
-      }
+    const searchToken = jwtSearchParam || tokenSearchParam || "";
+    const storageToken = localStorage.getItem("token") || "";
+
+    // Priority: Search token > LocalStorage token
+    const finalToken = searchToken || storageToken;
+
+    if (!finalToken) {
+      navigate('/');
+      return;
     }
-    navigate('/')
-  }, [jwtSearchParam, tokenSearchParam, navigate])
 
-
-  useEffect(() => {
-    const jwtToken = localToken || "";
-
-    if (jwtToken) {
-      if (isValidJWT(jwtToken)) {
-        authenticateApi(jwtToken).then((res) => {
-          if (res.data) {
-            const data: ApiResponse = res.data
-            if (data.isSuccess) {
-              navigate("/HomePage")
-            } else {
-              navigate('/')
-            }
-          } else {
-            console.log(res.error);
-          }
-        }).catch((err) => {
-          console.log(err);
-        })
-      }
+    if (!isValidJWT(finalToken)) {
+      navigate('/');
+      return;
     }
-    navigate('/')
-  }, [localToken])
+
+    authenticateApi(finalToken).then((res) => {
+      if (!res.data) {
+        console.log(res.error);
+        navigate('/');
+        return;
+      }
+
+      const data: ApiResponse = res.data;
+
+      if (!data.isSuccess) {
+        navigate('/');
+        return;
+      }
+
+      // If token came from search, overwrite localStorage (higher priority)
+      if (finalToken) {
+        if (finalToken !== storageToken)
+          localStorage.setItem('token', finalToken);
+
+        if (examTypeParam === 'mcq') {
+          navigate('/mcq', {
+            state: { examId: examIdParam, packageId: packageIdParam }
+          });
+          return;
+        }
+
+        if (examTypeParam === 'theory') {
+          navigate('/theory', {
+            state: { examId: examIdParam, packageId: packageIdParam }
+          });
+          return;
+        }
+      }
+
+      // Fallback: valid local token → homepage
+      navigate('/HomePage');
+    })
+      .catch((err) => {
+        console.log(err);
+        navigate('/');
+      });
+
+  }, [jwtSearchParam, tokenSearchParam, examIdParam, examTypeParam, packageIdParam, navigate]);
+
 
 
 

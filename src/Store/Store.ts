@@ -1,25 +1,26 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { captchaApi, authApi, spAppApi } from "../Api";
+import { authApi, captchaApi } from "../Api";
 
-import McqSlice from "./Slice/McqSlice";
+import baseApi from "../Api/baseApi";
 import DetailedSlice from "./Slice/DetailSlice";
-import p2tWebApi from "../Api/p2twebApi";
+import McqSlice from "./Slice/McqSlice";
 
 const store = configureStore({
   reducer: {
-    [spAppApi.reducerPath]: spAppApi.reducer,
     [captchaApi.reducerPath]: captchaApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
-    [p2tWebApi.reducerPath]: p2tWebApi.reducer,
+    [baseApi.reducerPath]: baseApi.reducer,
     mcqQuestion: McqSlice,
     detailed: DetailedSlice,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware()
-      .concat(spAppApi.middleware)
+    getDefaultMiddleware({
+      immutableCheck: false,
+      serializableCheck: false,
+    })
+      .concat(baseApi.middleware)
       .concat(captchaApi.middleware)
       .concat(authApi.middleware)
-      .concat(p2tWebApi.middleware)
 });
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -1,16 +1,25 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
 import { useGetMcqQuery } from "../../Api/spAppApi";
 import convertData from "../../Helper/ConvertData";
 import rtkErrorRead from "../../Helper/rtkErrorRead";
-import { setExamTypeTab } from "../../Store/Slice/DetailSlice";
+import { setExamTypeTab, setSelectedPackage } from "../../Store/Slice/DetailSlice";
 import { RootState } from "../../Store/Store";
 import Certification from "../MCQ/Certification";
+import Cohort from "../MCQ/Cohort";
 import Comprehensive from "../MCQ/Comprehensive";
 import OnlineRanked from "../MCQ/OnlineRanked";
 import QuickPractice from "../MCQ/QuickPractice";
 import PackageLayout from "./Package";
-import Cohort from "../MCQ/Cohort";
+
+const ExamTypes = [
+  { ExamType: "Quick Practice", ExamTypeTab: 0 },
+  { ExamType: "Comprehensive Full Test", ExamTypeTab: 1 },
+  { ExamType: "Online Ranked Competition", ExamTypeTab: 2 },
+  { ExamType: "Certifications (MCQ)", ExamTypeTab: 3 },
+  { ExamType: "Cohort", ExamTypeTab: 4 }
+]
 
 const MCQPage = ({
   isBack,
@@ -21,24 +30,27 @@ const MCQPage = ({
   selectedTab?: number;
 }) => {
   const dispatch = useDispatch()
-  const [selectedPackage, setSelectedPackage] = useState<any>(null);
+  const location = useLocation()
+  const { state: lState } = location
+
   const [mcqList, setMcqList] = useState<any[]>([]);
   const [filterMcqList, setFilterMcqList] = useState<any[]>([]);
-  const { selectedExamTypeTab: tab } = useSelector((s: RootState) => s.detailed)
+  const { selectedExamTypeTab: tab, selectedPackage } = useSelector((s: RootState) => s.detailed)
 
   const mcqApi = useGetMcqQuery({
     PackageId: selectedPackage?.PackageId || packageId,
   });
 
-  function setTab(index: number) {
-    if (index !== tab) {
-      dispatch(setExamTypeTab(index))
+  useEffect(() => {
+    if (!isNaN(Number(lState?.packageId))) {
+      dispatch(setSelectedPackage({ PackageId: Number(lState.packageId) }))
     }
-  }
+  }, [lState])
+
 
   useEffect(() => {
     if (mcqApi.isError) {
-      rtkErrorRead(mcqApi.data);
+      rtkErrorRead(mcqApi.error);
     } else {
       const mcq = convertData(mcqApi?.data?.result);
       // console.log(mcq)
@@ -49,6 +61,24 @@ const MCQPage = ({
   }, [mcqApi]);
 
   useEffect(() => {
+    if (!!lState) {
+      const { examId } = lState;
+      const exams = mcqList[0]?.TblMasterMCQSet || []
+      if (!!examId && !!exams.length) {
+        const exam = exams.find((e: any) => String(e.MCQSetId) === examId)
+        if (!!exam) {
+          const tabId = ExamTypes.find((et) => et.ExamType.toLowerCase().includes(exam?.ServicesTypeName?.toLowerCase()))?.ExamTypeTab
+          if (tabId !== undefined) {
+            dispatch(setExamTypeTab(tabId))
+          }
+          // console.log(exam, examId)
+        }
+      }
+    }
+  }, [lState, mcqList])
+
+
+  useEffect(() => {
     filterListData(isBack ? tab : 0, mcqList[0]?.TblMasterMCQSet || []);
   }, [isBack, mcqList]);
 
@@ -57,9 +87,13 @@ const MCQPage = ({
   }, [tab, mcqList])
 
 
-  const handlePackageSelect = (pkg: any) => {
-    setSelectedPackage(pkg);
-  };
+
+
+  function setTab(index: number) {
+    if (index !== tab) {
+      dispatch(setExamTypeTab(index))
+    }
+  }
 
   function filterListData(index: number, data: any[]) {
 
@@ -93,7 +127,7 @@ const MCQPage = ({
           {!isBack && (
             <div className="col-span-1">
               <div className="h-screen">
-                <PackageLayout onPackageSelect={handlePackageSelect} />
+                <PackageLayout />
               </div>
             </div>
           )}
@@ -103,74 +137,21 @@ const MCQPage = ({
             {!isBack && (
               <div className="flex flex-wrap gap-3 sticky top-0 z-10 p-4 text-center font-extrabold text-gray-800 mb-6 m-3 tracking-tight border-b pb-3 bg-white">
 
-                <button
-                  className={`${tab === 0
-                    ? "bg-[#043f72] text-white shadow-md font-semibold text-lg"
-                    : "text-gray-500 hover:text-sky-600 hover:bg-sky-100"
-                    }
-                          px-4 py-2 rounded-md transition-all duration-200 ease-in-out
-                          focus:outline-none focus-visible:ring-2
-                          ltr:mr-2 rtl:ml-2 font-bold`}
-                  onClick={() => setTab(0)}
-                >
-                  Quick Practice
-                  {/* {filteredMCQs.length} */}
-                </button>
-
-
-                <button
-                  className={`${tab === 1
-                    ? "bg-[#043f72] text-white shadow-md font-semibold text-lg"
-                    : "text-gray-500 hover:text-sky-600 hover:bg-sky-100"
-                    }
-                          px-4 py-2 rounded-md transition-all duration-200 ease-in-out
-                          focus:outline-none focus-visible:ring-2
-                          ltr:mr-2 rtl:ml-2 font-bold`}
-                  onClick={() => setTab(1)}
-                >
-                  Comprehensive Full Test
-                </button>
-
-
-                <button
-                  className={`${tab === 2
-                    ? "bg-[#043f72] text-white shadow-md font-semibold text-lg"
-                    : "text-gray-500 hover:text-sky-600 hover:bg-sky-100"
-                    }
-                      px-4 py-2 rounded-md transition-all duration-200 ease-in-out
-                      focus:outline-none focus-visible:ring-2
-                      ltr:mr-2 rtl:ml-2 font-bold`}
-                  onClick={() => setTab(2)}
-                >
-                  Online Ranked Competition
-                </button>
-
-                <button
-                  className={`${tab === 3
-                    ? "bg-[#043f72] text-white shadow-md font-semibold text-lg"
-                    : "text-gray-500 hover:text-sky-600 hover:bg-sky-100"
-                    }
-                      px-4 py-2 rounded-md transition-all duration-200 ease-in-out
-                      focus:outline-none focus-visible:ring-2
-                      ltr:mr-2 rtl:ml-2 font-bold`}
-                  onClick={() => setTab(3)}
-                >
-                  Certifications(MCQ)
-                </button>
-
-                <button
-                  className={`${tab === 4
-                    ? "bg-[#043f72] text-white shadow-md font-semibold text-lg"
-                    : "text-gray-500 hover:text-sky-600 hover:bg-sky-100"
-                    }
-                      px-4 py-2 rounded-md transition-all duration-200 ease-in-out
-                      focus:outline-none focus-visible:ring-2
-                      ltr:mr-2 rtl:ml-2 font-bold`}
-                  onClick={() => setTab(4)}
-                >
-                  Cohort
-                </button>
-
+                {ExamTypes.map((data: any, index: number) => (
+                  <button
+                    key={`examType-${index}`}
+                    className={`${tab === data.ExamTypeTab
+                      ? "bg-[#043f72] text-white shadow-md font-semibold text-lg"
+                      : "text-gray-500 hover:text-sky-600 hover:bg-sky-100"
+                      }
+                            px-4 py-2 rounded-md transition-all duration-200 ease-in-out
+                            focus:outline-none focus-visible:ring-2
+                            ltr:mr-2 rtl:ml-2 font-bold`}
+                    onClick={() => setTab(data.ExamTypeTab)}
+                  >
+                    {data.ExamType}
+                  </button>
+                ))}
               </div>
             )}
 
@@ -214,5 +195,7 @@ const MCQPage = ({
     </>
   );
 };
+
+
 
 export default MCQPage;

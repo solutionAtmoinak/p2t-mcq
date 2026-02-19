@@ -1,98 +1,46 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { SD_SPNameList } from "../Utility/StaticData";
+import baseApi from "./baseApi";
 
-const baseQuery = fetchBaseQuery({
-  baseUrl: `${import.meta.env.VITE_APP_APIBaseUrl}/AuthDataGet/ExecuteJson/${
-    SD_SPNameList.DB_SP_Package
-  }`,
-});
+const baseUrl = '/AuthDataGet/ExecuteJson/spAppApi'
 
-const spAppApi = createApi({
-  reducerPath: "spPackageApi",
-  baseQuery: async (args, api, extraOptions) => {
-    try {
-      const result = await baseQuery(args, api, extraOptions);
-      if (result.error?.status === 401) {
-        localStorage.removeItem("token");
-        window.location.replace("/");
-      }
-      return result;
-    } catch (error: any) {
-      if (error.status === 401) {
-        localStorage.removeItem("token");
-        window.location.replace("/");
-      }
-      throw error;
-    }
-  },
-  tagTypes: ["Package", "Mcq", "Theory"],
+const spAppApi = baseApi.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     getPackage: builder.query({
       query: () => ({
-        url: "14",
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-type": "application/json",
-        },
+        url: `${baseUrl}/14`,
         body: {},
       }),
       providesTags: ["Package"],
     }),
     getMcq: builder.query({
       query: (data: any) => ({
-        url: "23",
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-type": "application/json",
-        },
+        url: `${baseUrl}/23`,
         body: data,
       }),
       providesTags: ["Package"],
     }),
     getTheory: builder.query({
       query: (data: any) => ({
-        url: "35",
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-type": "application/json",
-        },
+        url: `${baseUrl}/35`,
         body: data,
       }),
       providesTags: ["Package"],
     }),
     submitAnswer: builder.mutation({
       query: (data: any) => ({
-        url: "26",
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-type": "application/json",
-        },
+        url: `${baseUrl}/26`,
         body: data,
       }),
     }),
     submitExam: builder.mutation({
       query: (data: any) => ({
-        url: "41",
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-type": "application/json",
-        },
+        url: `${baseUrl}/41`,
         body: data,
       }),
     }),
     fetchDbAnswers: builder.mutation({
       query: (data: any) => ({
-        url: "46",
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          "Content-type": "application/json",
-        },
+        url: `${baseUrl}/46`,
         body: data,
       }),
     }),

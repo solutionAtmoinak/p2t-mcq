@@ -1,12 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import MCQPaper from "../../interface/MCQPaper";
 import MCQSet from "../../interface/MCQSet";
+import { IPackage } from "../../interface/Package";
 
 interface IDetailed {
   selectedExamTypeTab: number;
   selectedMcqSet: MCQSet;
   selectedMcqPaper: MCQPaper;
   examStartTime: string;
+  selectedPackage: IPackage | null
 }
 
 const initialState: IDetailed = {
@@ -14,6 +16,7 @@ const initialState: IDetailed = {
   selectedMcqPaper: {},
   selectedMcqSet: {},
   examStartTime: "",
+  selectedPackage: null
 };
 
 const DetailedSlice = createSlice({
@@ -32,6 +35,9 @@ const DetailedSlice = createSlice({
     setExamStartTime: (state, action: PayloadAction<string>) => {
       state.examStartTime = action.payload;
     },
+    setSelectedPackage: (state, action: PayloadAction<IPackage>) => {
+      state.selectedPackage = action.payload
+    }
   },
 });
 
@@ -40,5 +46,6 @@ export const {
   setSelectedMCQSet,
   setSelectedMCQPaper,
   setExamStartTime,
+  setSelectedPackage
 } = DetailedSlice.actions;
 export default DetailedSlice.reducer;

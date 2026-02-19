@@ -4,33 +4,36 @@ import convertData from "../../Helper/ConvertData";
 import rtkErrorRead from "../../Helper/rtkErrorRead";
 import { useLogoutUserMutation } from "../../Api/authApi";
 import toastNotify from "../../Helper/ToastNotify";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../Store/Store";
+import { setSelectedPackage } from "../../Store/Slice/DetailSlice";
 
-const PackageLayout = ({
-  onPackageSelect,
-}: {
-  onPackageSelect: (pkg: any) => void;
-}) => {
+
+const PackageLayout = () => {
+  const dispatch = useDispatch()
   const { data, isError, error } = useGetPackageQuery({});
   const [logoutApi] = useLogoutUserMutation()
   const [packageList, setPackageList] = useState<any[]>([]);
-  const [selectedPackage, setSelectedPackage] = useState<any>(null);
+  const { selectedPackage } = useSelector((s: RootState) => s.detailed)
+
 
   useEffect(() => {
     if (isError) {
       rtkErrorRead(error);
     } else {
       const PackageData = convertData(data?.result);
+      // console.log(PackageData)
       if (PackageData && PackageData.length > 0) {
         setPackageList(PackageData);
-        setSelectedPackage(PackageData[0]);
-        onPackageSelect(PackageData[0]);
+        if (selectedPackage === null) {
+          dispatch(setSelectedPackage(PackageData[0]))
+        }
       }
     }
   }, [data, error, isError]);
 
   const handlePackageClick = (pkg: any) => {
-    setSelectedPackage(pkg);
-    onPackageSelect(pkg);
+    dispatch(setSelectedPackage(pkg))
   };
 
   async function handelLogout() {
