@@ -6,19 +6,19 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { useGetMcqQuery, useSubmitAnswerMutation } from "../../Api/spAppApi";
 import convertData from "../../Helper/ConvertData";
-import DrawerComp from "../../Helper/DrawerComp";
 import MathMLComp from "../../Helper/MathMlComp";
 import rtkErrorRead from "../../Helper/rtkErrorRead";
 import {
   TblMasterMcqAnswer,
   TblMasterMCQQuestion,
-} from "../../interface/McqQuestion";
+} from "../../interface/MCQQuestion";
 import {
   setAllQuestionSet,
   setQuestionList,
   setSelectedOption
 } from "../../Store/Slice/McqSlice";
 import { RootState } from "../../Store/Store";
+import DrawerComp from "../Common/DrawerComp";
 import IconClock from "../Icon/IconClock";
 import IconGrid from "../Icon/IconGrid";
 import IconHelp from "../Icon/IconHelp";

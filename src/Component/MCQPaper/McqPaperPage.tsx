@@ -9,7 +9,7 @@ import { useFetchDbAnswersMutation, useGetMcqQuery, useSubmitExamMutation } from
 import convertData from "../../Helper/ConvertData";
 import ModalComp from "../../Helper/ModalComp";
 import rtkErrorRead from "../../Helper/rtkErrorRead";
-import { TblMasterMcqAnswer } from "../../interface/McqQuestion";
+import { TblMasterMcqAnswer } from "../../interface/MCQQuestion";
 import { setSelectedMCQPaper } from "../../Store/Slice/DetailSlice";
 import { loadInitialOptions, setSelectedPackageId } from "../../Store/Slice/McqSlice";
 import IconBack from "../Icon/IconBack";
@@ -62,6 +62,7 @@ const McqPaperPage = ({ packageId, mcqId, PaperType }: { packageId: any; mcqId: 
 
 
   const handleExamClick = (exam: any) => {
+
     dispatch(setSelectedMCQPaper({
       PaperType: PaperType,
       FromDate: exam?.FromDate,

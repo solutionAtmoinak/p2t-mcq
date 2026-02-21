@@ -3,7 +3,7 @@ import {
   AllQuestionSet,
   TblMasterMcqAnswer,
   TblMasterMCQQuestion,
-} from "../../interface/McqQuestion";
+} from "../../interface/MCQQuestion";
 
 interface initialStateForMcq {
   mcqQuestionList: TblMasterMCQQuestion[];

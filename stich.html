@@ -1,236 +1,169 @@
-<!DOCTYPE html>
-<html lang="en">
+﻿<!DOCTYPE html>
+<html class="light" lang="en">
 
 <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>ICRM Learning Dashboard</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
-        rel="stylesheet" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-        rel="stylesheet" />
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#F29F05", // The orange brand color
-                        secondary: "#003B6B", // Dark blue for buttons
-                        "background-light": "#E1EDF9", // The light blue from the sidebar
-                        "main-bg": "#F8FAFC",
-                    },
-                    fontFamily: {
-                        sans: ["Inter", "sans-serif"],
-                    },
-                    borderRadius: {
-                        DEFAULT: "0.5rem",
-                        "large": "1.5rem"
-                    },
-                },
-            },
-        };
-    </script>
-    <style type="text/tailwindcss">
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-        .material-symbols-outlined {
-            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
-        }
-        .sidebar-scroll {
-            scrollbar-width: thin;
-            scrollbar-color: rgba(0, 0, 0, 0.1) transparent;
-        }
-        .custom-card-shadow {
-            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>ICRM Exam Results</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect" />
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Outfit:wght@600;700&amp;family=Material+Icons+Outlined&amp;display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#0f3d61",
+            "background-light": "#f8fafc",
+            "background-dark": "#0f172a",
+            "brand-orange": "#f59e0b",
+            "card-blue": "#e0f2fe"
+          },
+          fontFamily: {
+            display: ["Outfit", "sans-serif"],
+            sans: ["Inter", "sans-serif"],
+          },
+          borderRadius: {
+            DEFAULT: "0.75rem",
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    .gauge-container {
+      position: relative;
+      width: 240px;
+      height: 140px;
+      overflow: hidden;
+    }
+
+    .gauge-bg {
+      fill: none;
+      stroke: #ffffff;
+      stroke-width: 35;
+    }
+
+    .gauge-fill {
+      fill: none;
+      stroke: #f59e0b;
+      stroke-width: 35;
+      stroke-dasharray: 314;
+      stroke-dashoffset: 125;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1s ease-out;
+    }
+
+    .gauge-svg {
+      transform: rotate(-180deg);
+    }
+  </style>
 </head>
 
-<body class="bg-main-bg text-slate-800">
-    <div class="flex h-screen overflow-hidden">
-        <aside class="w-72 h-full bg-background-light border-r border-blue-100 flex flex-col shrink-0">
-            <div class="p-8">
-                <div class="flex items-center gap-2">
-                    <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-sm">
-                        <span class="material-symbols-outlined text-white text-2xl">hexagon</span>
-                    </div>
-                    <span class="text-xl font-bold tracking-tight text-slate-700 uppercase">Peaks<span
-                            class="text-primary">2</span>Tails</span>
-                </div>
+<body
+  class="bg-background-light dark:bg-background-dark font-sans text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200">
+  <div class="max-w-[1200px] mx-auto p-4 md:p-8">
+    <header class="bg-card-blue dark:bg-slate-800 rounded-3xl p-8 mb-6 shadow-sm">
+      <h1 class="font-display text-3xl font-bold text-primary dark:text-blue-300 mb-6">
+        ICRM (Integrated Credit Risk Model)
+      </h1>
+      <div
+        class="inline-flex items-center gap-2 bg-brand-orange px-4 py-2 rounded-full text-white font-medium shadow-sm">
+        <span class="material-icons-outlined text-xl">alarm</span>
+        <span class="text-sm">Exam time ended.</span>
+      </div>
+    </header>
+    <nav class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400 mb-8 px-2">
+      <a class="hover:text-primary dark:hover:text-blue-400 transition-colors" href="#">Dashboard</a>
+      <span class="material-icons-outlined text-sm">chevron_right</span>
+      <a class="hover:text-primary dark:hover:text-blue-400 transition-colors" href="#">Cohort</a>
+      <span class="material-icons-outlined text-sm">chevron_right</span>
+      <span class="font-semibold text-primary dark:text-blue-300">ICRM (Integrated Credit Risk Model)</span>
+    </nav>
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      <div
+        class="lg:col-span-5 bg-card-blue dark:bg-slate-800/50 rounded-3xl p-10 flex flex-col items-center justify-center border border-transparent dark:border-slate-700 h-full min-h-[400px]">
+        <div class="relative flex flex-col items-center">
+          <div class="gauge-container">
+            <svg class="gauge-svg w-full h-full" viewBox="0 0 200 100">
+              <path class="gauge-bg" d="M 20 100 A 80 80 0 0 1 180 100"></path>
+              <path class="gauge-fill" d="M 20 100 A 80 80 0 0 1 180 100"></path>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-end pb-2">
+              <span class="font-display text-5xl font-bold text-primary dark:text-white leading-tight">29</span>
+              <span
+                class="text-slate-500 dark:text-slate-400 font-semibold uppercase tracking-widest text-xs mt-1">Score</span>
             </div>
-            <div class="flex-1 px-6 overflow-y-auto sidebar-scroll">
-                <nav class="space-y-6">
-                    <div>
-                        <h2 class="text-sm font-bold text-slate-500 uppercase tracking-wider mb-4 px-2">Dashboard</h2>
-                        <div class="space-y-2">
-                            <button
-                                class="w-full flex items-center justify-between px-3 py-3 text-slate-700 hover:bg-white/50 rounded-xl transition-colors group">
-                                <div class="flex items-center gap-3">
-                                    <span class="material-symbols-outlined text-slate-500">inventory_2</span>
-                                    <span class="font-semibold text-sm">Package List</span>
-                                </div>
-                                <span class="material-symbols-outlined text-slate-400">expand_more</span>
-                            </button>
-                            <div class="px-2">
-                                <button
-                                    class="w-full py-2.5 px-4 bg-primary text-white font-bold rounded-full shadow-md hover:brightness-105 active:scale-95 transition-all text-sm tracking-wide">
-                                    ICRM
-                                </button>
-                            </div>
-                            <button
-                                class="w-full flex items-center justify-between px-3 py-3 text-slate-700 hover:bg-white/50 rounded-xl transition-colors group">
-                                <div class="flex items-center gap-3">
-                                    <span class="material-symbols-outlined text-slate-500">card_giftcard</span>
-                                    <span class="font-semibold text-sm">Free Package List</span>
-                                </div>
-                                <span class="material-symbols-outlined text-slate-400">expand_more</span>
-                            </button>
-                        </div>
-                    </div>
-                </nav>
+          </div>
+        </div>
+        <div class="mt-12 flex items-center gap-3 text-primary dark:text-blue-300">
+          <div class="bg-white/50 dark:bg-slate-700 p-2 rounded-lg">
+            <span class="material-icons-outlined text-2xl">hourglass_empty</span>
+          </div>
+          <span class="font-display text-2xl font-semibold">Your Progress</span>
+        </div>
+      </div>
+      <div class="lg:col-span-7 flex flex-col gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div
+            class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex justify-between items-center group hover:shadow-md transition-shadow">
+            <div>
+              <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1">Answer</p>
+              <p class="text-4xl font-display font-bold text-slate-800 dark:text-white">29</p>
             </div>
-            <div class="p-8">
-                <button
-                    class="w-full py-3 px-4 bg-secondary text-white font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-[#002B4F] transition-colors shadow-lg active:scale-95">
-                    Sign out
-                </button>
+            <div class="bg-orange-100 dark:bg-orange-900/30 p-2.5 rounded-full text-orange-500">
+              <span class="material-icons-outlined text-3xl">check_circle</span>
             </div>
-        </aside>
-        <main class="flex-1 overflow-y-auto p-8 space-y-8">
-            <section class="bg-[#DCE9F9] rounded-3xl p-8 relative overflow-hidden">
-                <div class="relative z-10 max-w-2xl">
-                    <h1 class="text-3xl font-bold text-[#003B6B]">Welcome To better Learning, <span
-                            class="text-primary">Rahul Sharma</span></h1>
-                    <p class="text-[#003B6B]/70 mt-2 font-medium italic">Best, no-risk heading</p>
-                    <div class="mt-6 inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
-                        <span class="text-primary text-sm font-bold">Ready to start your test? Give it your best!
-                            ✨</span>
-                    </div>
-                </div>
-                <div class="absolute right-0 top-0 h-full w-1/3 opacity-10">
-                    <span class="material-symbols-outlined text-[150px] rotate-12">school</span>
-                </div>
-            </section>
-            <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-[#FDE7C1] p-6 rounded-2xl flex flex-col border border-orange-200/50">
-                    <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm">
-                        <span class="material-symbols-outlined text-primary">lightbulb</span>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2 text-slate-800">Quick Practice</h3>
-                    <p class="text-sm text-slate-600 flex-1 leading-relaxed">Practice small sets of questions to quickly
-                        understand concepts and improve accuracy.</p>
-                    <a class="mt-4 flex items-center gap-2 text-slate-800 font-bold text-sm" href="#">
-                        Get started <span class="material-symbols-outlined text-sm">chevron_right</span>
-                    </a>
-                </div>
-                <div class="bg-[#E1EDF9] p-6 rounded-2xl flex flex-col border border-blue-200/50">
-                    <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm">
-                        <span class="material-symbols-outlined text-blue-500">groups</span>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2 text-slate-800">Cohort</h3>
-                    <p class="text-sm text-slate-600 flex-1 leading-relaxed">Structured batch-based learning with live
-                        sessions, assessments, and progress tracking.</p>
-                    <a class="mt-4 flex items-center gap-2 text-slate-800 font-bold text-sm" href="#">
-                        Get started <span class="material-symbols-outlined text-sm">chevron_right</span>
-                    </a>
-                </div>
-                <div class="bg-[#E1EDF9] p-6 rounded-2xl flex flex-col border border-blue-200/50">
-                    <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm">
-                        <span class="material-symbols-outlined text-blue-500">assignment</span>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2 text-slate-800">Comprehensive Full Test</h3>
-                    <p class="text-sm text-slate-600 flex-1 leading-relaxed">Full-syllabus assessment to measure
-                        conceptual clarity, accuracy, and time management.</p>
-                </div>
-                <div class="bg-[#E1EDF9] p-6 rounded-2xl flex flex-col border border-blue-200/50">
-                    <div class="w-10 h-10 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm">
-                        <span class="material-symbols-outlined text-blue-500">workspace_premium</span>
-                    </div>
-                    <h3 class="font-bold text-lg mb-2 text-slate-800">Certification(MCQ)</h3>
-                    <p class="text-sm text-slate-600 flex-1 leading-relaxed">Standardized MCQ assessments for skill
-                        validation and certification.</p>
-                </div>
-            </section>
-            <section class="space-y-6">
-                <div class="flex items-center justify-between">
-                    <h2 class="text-xl font-bold text-[#003B6B]">My Exam</h2>
-                </div>
-                <div class="bg-white rounded-3xl p-1 border border-slate-100 custom-card-shadow">
-                    <div class="flex flex-col lg:flex-row gap-6 p-4">
-                        <div class="flex-1 min-w-0">
-                            <h3 class="text-xl font-bold text-[#003B6B] mb-4">ICRM (Integrated Credit Risk Model)</h3>
-                            <div
-                                class="relative bg-secondary rounded-2xl p-6 overflow-hidden aspect-[16/9] lg:aspect-auto h-[220px] flex items-center justify-between group">
-                                <div class="relative z-10 space-y-4">
-                                    <div class="text-white">
-                                        <p class="text-xs uppercase tracking-widest font-bold opacity-60">Course</p>
-                                        <h4 class="text-lg font-bold leading-tight">INTEGRATED<br />CREDIT
-                                            RISK<br />MODELLING</h4>
-                                    </div>
-                                    <div class="flex flex-col gap-1">
-                                        <p class="text-[10px] text-white/50 uppercase">Valid Till:</p>
-                                        <p class="text-xs text-white font-bold">Dec-27-2025</p>
-                                    </div>
-                                    <button class="bg-primary text-white text-xs font-bold py-2 px-6 rounded-full">Join
-                                        Exam</button>
-                                </div>
-                                <div
-                                    class="relative z-10 w-32 h-44 bg-white rounded shadow-2xl transform rotate-3 flex flex-col items-center justify-center p-2 border-l-4 border-slate-200">
-                                    <div class="text-[8px] font-bold text-slate-400 uppercase mb-2">ICRM Handbook</div>
-                                    <span class="material-symbols-outlined text-slate-200 text-6xl">menu_book</span>
-                                    <div class="mt-4 w-full h-1 bg-slate-100 rounded"></div>
-                                    <div class="mt-1 w-2/3 h-1 bg-slate-100 rounded"></div>
-                                </div>
-                                <div class="absolute inset-0 opacity-10 pointer-events-none"
-                                    style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;">
-                                </div>
-                            </div>
-                            <div class="mt-4 flex justify-between text-xs text-slate-400 font-medium px-2">
-                                <span>Start Time: 10:00 AM</span>
-                                <span>End Time: 12:00 PM</span>
-                            </div>
-                        </div>
-                        <div class="lg:w-96 bg-[#F8FAFC] rounded-2xl p-8 flex flex-col">
-                            <div class="flex justify-between items-start mb-6">
-                                <div>
-                                    <h4 class="text-lg font-bold text-[#003B6B]">Hey!</h4>
-                                    <p class="text-sm font-medium text-[#003B6B]/70">Confidence comes from preparation.
-                                    </p>
-                                </div>
-                                <button
-                                    class="bg-primary text-white font-bold py-2.5 px-6 rounded-xl shadow-lg shadow-orange-200 hover:scale-105 transition-transform active:scale-95 text-sm">
-                                    Start now
-                                </button>
-                            </div>
-                            <div class="space-y-4 mt-auto">
-                                <div class="flex justify-between items-center py-2 border-b border-slate-200/50">
-                                    <span class="text-sm font-semibold text-slate-500">Total Questions:</span>
-                                    <span class="text-sm font-bold text-[#003B6B]">100</span>
-                                </div>
-                                <div class="flex justify-between items-center py-2 border-b border-slate-200/50">
-                                    <span class="text-sm font-semibold text-slate-500">Total Marks:</span>
-                                    <span class="text-sm font-bold text-[#003B6B]">100</span>
-                                </div>
-                                <div class="flex justify-between items-center py-2 border-b border-slate-200/50">
-                                    <span class="text-sm font-semibold text-slate-500">Duration:</span>
-                                    <span class="text-sm font-bold text-[#003B6B]">120 Minutes</span>
-                                </div>
-                                <div class="flex justify-between items-center py-2">
-                                    <span class="text-sm font-semibold text-slate-500">Question Type:</span>
-                                    <span class="text-sm font-bold text-[#003B6B]">Multiple Choice (MCQ)</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-        </main>
+          </div>
+          <div
+            class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex justify-between items-center group hover:shadow-md transition-shadow">
+            <div>
+              <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1 leading-tight">Marked
+                for<br />Review</p>
+              <p class="text-4xl font-display font-bold text-slate-800 dark:text-white">29</p>
+            </div>
+            <div class="bg-red-100 dark:bg-red-900/30 p-2.5 rounded-full text-red-500">
+              <span class="material-icons-outlined text-3xl">cancel</span>
+            </div>
+          </div>
+          <div
+            class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex justify-between items-center group hover:shadow-md transition-shadow">
+            <div>
+              <p class="text-slate-500 dark:text-slate-400 text-sm font-medium mb-1 leading-tight">
+                Skipping<br />Question</p>
+              <p class="text-4xl font-display font-bold text-slate-800 dark:text-white">29</p>
+            </div>
+            <div class="bg-blue-100 dark:bg-primary/20 p-2.5 rounded-full text-primary dark:text-blue-400">
+              <span class="material-icons-outlined text-3xl">east</span>
+            </div>
+          </div>
+        </div>
+        <div
+          class="bg-orange-50 dark:bg-orange-900/10 border-2 border-orange-200 dark:border-orange-800/50 rounded-2xl p-6 flex items-start gap-4 shadow-sm">
+          <div class="bg-orange-100 dark:bg-orange-900/40 p-2 rounded-lg">
+            <span class="material-icons-outlined text-orange-600 dark:text-orange-400">celebration</span>
+          </div>
+          <div>
+            <h3 class="text-lg font-display font-bold text-orange-800 dark:text-orange-300">Congratulations for your
+              success.</h3>
+            <p class="text-orange-700/80 dark:text-orange-400/80 font-medium">You Qualify for the certificate</p>
+          </div>
+        </div>
+        <div class="mt-4 flex justify-end">
+          <button
+            class="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-8 py-3 rounded-xl font-semibold transition-all shadow-lg active:scale-95">
+            <span>Download Certificate</span>
+            <span class="material-icons-outlined text-sm">download</span>
+          </button>
+        </div>
+      </div>
     </div>
+  </div>
 
 </body>
 
-</html>l
+</html>

@@ -13,4 +13,5 @@ export default interface UserRegisterDTO {
   roles?: string[];
   RoleName?: string;
   FranchiseName?: string;
+  FranchiseId?: number;
 }

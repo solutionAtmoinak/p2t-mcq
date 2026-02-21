@@ -1,4 +1,6 @@
-export default interface MCQPaper {
+import TblMasterMCQSection from "./MCQSection";
+
+export default interface TblMasterMCQPaper {
   MCQPaperId?: number;
   MCQSetId?: number;
   MCQPaperName?: string;
@@ -27,4 +29,5 @@ export default interface MCQPaper {
   IsResultPublished?: boolean;
   IsAnswerSheetShow?: boolean;
   IsActive?: boolean;
+  TblMasterMCQSection?: TblMasterMCQSection[]
 }

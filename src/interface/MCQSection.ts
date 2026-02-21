@@ -1,4 +1,6 @@
-export default interface MCQSection {
+import { TblMasterMCQQuestion } from "./MCQQuestion";
+
+export default interface TblMasterMCQSection {
   MCQSectionId?: number;
   MCQPaperId?: number;
   MCQSectionName?: string;
@@ -10,4 +12,5 @@ export default interface MCQSection {
   IsRandomizedOption?: boolean;
   SectionTotalMarks?: number;
   DefaultMarks?: number;
+  TblMasterMCQQuestion?: TblMasterMCQQuestion[]
 }

@@ -1,4 +1,6 @@
-export default interface MCQSet {
+import TblMasterMCQPaper from "./MCQPaper";
+
+export default interface TblMasterMCQSet {
   MCQSetId?: number;
   PackageId?: number;
   FranchiseId?: number;
@@ -23,4 +25,5 @@ export default interface MCQSet {
   IsLive?: boolean;
   LiveFromTime?: string;
   InternelServiceId?: number;
+  TblMasterMCQPaper?: TblMasterMCQPaper[]
 }

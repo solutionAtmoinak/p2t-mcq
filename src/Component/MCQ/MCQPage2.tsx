@@ -1,163 +1,41 @@
+import { format } from "date-fns";
+import { useEffect, useState } from "react";
+import { PiExam } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
-import { useGetPackageQuery } from "../../Api/spAppApi";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useLogoutUserMutation } from "../../Api/authApi";
-import { useState } from "react";
+import { useMcqExamServiceTypeQuery } from "../../Api/p2twebApi";
+import { useGetMcqQuery, useGetPackageQuery } from "../../Api/spAppApi";
 import convertData from "../../Helper/ConvertData";
-import rtkErrorRead from "../../Helper/rtkErrorRead";
-import { useEffect } from "react";
 import toastNotify from "../../Helper/ToastNotify";
-import { setSelectedPackage } from "../../Store/Slice/DetailSlice";
+import rtkErrorRead from "../../Helper/rtkErrorRead";
+import { setSelectedInternalService, setSelectedMCQPaper, setSelectedMCQSet, setSelectedPackage } from "../../Store/Slice/DetailSlice";
 import { RootState } from "../../Store/Store";
+import useUserData from "../../hooks/userData";
+import { InternalService } from "../../interface/InternalService";
+import TblMasterMCQSet from "../../interface/MCQSet";
 import { IPackage } from "../../interface/Package";
+import ModalComp2 from "../Common/ModalComp2";
+import TblMasterMCQPaper from "../../interface/MCQPaper";
+import examTimeFormatter from "../../Helper/examTimeFormatter";
+
 
 const MCQPage2 = () => {
-    return (
-        <section className="bg-main-bg text-slate-800">
-            <div className="flex h-screen overflow-hidden">
-                <SideBar />
-                <main className="flex-1 overflow-y-auto p-8 space-y-8">
-                    <section className="bg-[#DCE9F9] rounded-3xl p-8 relative overflow-hidden">
-                        <div className="relative z-10 max-w-2xl">
-                            <h1 className="text-3xl font-bold text-[#003B6B]">Welcome To better Learning, <span
-                                className="text-primary">Rahul Sharma</span></h1>
-                            <p className="text-[#003B6B]/70 mt-2 font-medium italic">Best, no-risk heading</p>
-                            <div className="mt-6 inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
-                                <span className="text-primary text-sm font-bold">Ready to start your test? Give it your best!
-                                    ✨</span>
-                            </div>
-                        </div>
-                        <div className="absolute right-0 top-0 h-full w-1/3 opacity-10">
-                            <span className="material-symbols-outlined text-[150px] rotate-12">school</span>
-                        </div>
-                    </section>
-                    <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                        <div className="bg-[#FDE7C1] p-6 rounded-2xl flex flex-col border border-orange-200/50">
-                            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm">
-                                <span className="material-symbols-outlined text-primary">lightbulb</span>
-                            </div>
-                            <h3 className="font-bold text-lg mb-2 text-slate-800">Quick Practice</h3>
-                            <p className="text-sm text-slate-600 flex-1 leading-relaxed">Practice small sets of questions to quickly
-                                understand concepts and improve accuracy.</p>
-                            <a className="mt-4 flex items-center gap-2 text-slate-800 font-bold text-sm" href="#">
-                                Get started <span className="material-symbols-outlined text-sm">chevron_right</span>
-                            </a>
-                        </div>
-                        <div className="bg-[#E1EDF9] p-6 rounded-2xl flex flex-col border border-blue-200/50">
-                            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm">
-                                <span className="material-symbols-outlined text-blue-500">groups</span>
-                            </div>
-                            <h3 className="font-bold text-lg mb-2 text-slate-800">Cohort</h3>
-                            <p className="text-sm text-slate-600 flex-1 leading-relaxed">Structured batch-based learning with live
-                                sessions, assessments, and progress tracking.</p>
-                            <a className="mt-4 flex items-center gap-2 text-slate-800 font-bold text-sm" href="#">
-                                Get started <span className="material-symbols-outlined text-sm">chevron_right</span>
-                            </a>
-                        </div>
-                        <div className="bg-[#E1EDF9] p-6 rounded-2xl flex flex-col border border-blue-200/50">
-                            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm">
-                                <span className="material-symbols-outlined text-blue-500">assignment</span>
-                            </div>
-                            <h3 className="font-bold text-lg mb-2 text-slate-800">Comprehensive Full Test</h3>
-                            <p className="text-sm text-slate-600 flex-1 leading-relaxed">Full-syllabus assessment to measure
-                                conceptual clarity, accuracy, and time management.</p>
-                        </div>
-                        <div className="bg-[#E1EDF9] p-6 rounded-2xl flex flex-col border border-blue-200/50">
-                            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm">
-                                <span className="material-symbols-outlined text-blue-500">workspace_premium</span>
-                            </div>
-                            <h3 className="font-bold text-lg mb-2 text-slate-800">Certification(MCQ)</h3>
-                            <p className="text-sm text-slate-600 flex-1 leading-relaxed">Standardized MCQ assessments for skill
-                                validation and certification.</p>
-                        </div>
-                    </section>
-                    <section className="space-y-6">
-                        <div className="flex items-center justify-between">
-                            <h2 className="text-xl font-bold text-[#003B6B]">My Exam</h2>
-                        </div>
-                        <div className="bg-white rounded-3xl p-1 border border-slate-100 custom-card-shadow">
-                            <div className="flex flex-col lg:flex-row gap-6 p-4">
-                                <div className="flex-1 min-w-0">
-                                    <h3 className="text-xl font-bold text-[#003B6B] mb-4">ICRM (Integrated Credit Risk Model)</h3>
-                                    <div
-                                        className="relative bg-secondary rounded-2xl p-6 overflow-hidden aspect-[16/9] lg:aspect-auto h-[220px] flex items-center justify-between group">
-                                        <div className="relative z-10 space-y-4">
-                                            <div className="text-white">
-                                                <p className="text-xs uppercase tracking-widest font-bold opacity-60">Course</p>
-                                                <h4 className="text-lg font-bold leading-tight">INTEGRATED<br />CREDIT
-                                                    RISK<br />MODELLING</h4>
-                                            </div>
-                                            <div className="flex flex-col gap-1">
-                                                <p className="text-[10px] text-white/50 uppercase">Valid Till:</p>
-                                                <p className="text-xs text-white font-bold">Dec-27-2025</p>
-                                            </div>
-                                            <button className="bg-primary text-white text-xs font-bold py-2 px-6 rounded-full">Join
-                                                Exam</button>
-                                        </div>
-                                        <div
-                                            className="relative z-10 w-32 h-44 bg-white rounded shadow-2xl transform rotate-3 flex flex-col items-center justify-center p-2 border-l-4 border-slate-200">
-                                            <div className="text-[8px] font-bold text-slate-400 uppercase mb-2">ICRM Handbook</div>
-                                            <span className="material-symbols-outlined text-slate-200 text-6xl">menu_book</span>
-                                            <div className="mt-4 w-full h-1 bg-slate-100 rounded"></div>
-                                            <div className="mt-1 w-2/3 h-1 bg-slate-100 rounded"></div>
-                                        </div>
-                                        <div className="absolute inset-0 opacity-10 pointer-events-none"
-                                        // style="background-image: radial-gradient(#ffffff 1px, transparent 1px); background-size: 20px 20px;"
-                                        >
-                                        </div>
-                                    </div>
-                                    <div className="mt-4 flex justify-between text-xs text-slate-400 font-medium px-2">
-                                        <span>Start Time: 10:00 AM</span>
-                                        <span>End Time: 12:00 PM</span>
-                                    </div>
-                                </div>
-                                <div className="lg:w-96 bg-[#F8FAFC] rounded-2xl p-8 flex flex-col">
-                                    <div className="flex justify-between items-start mb-6">
-                                        <div>
-                                            <h4 className="text-lg font-bold text-[#003B6B]">Hey!</h4>
-                                            <p className="text-sm font-medium text-[#003B6B]/70">Confidence comes from preparation.
-                                            </p>
-                                        </div>
-                                        <button
-                                            className="bg-primary text-white font-bold py-2.5 px-6 rounded-xl shadow-lg shadow-orange-200 hover:scale-105 transition-transform active:scale-95 text-sm">
-                                            Start now
-                                        </button>
-                                    </div>
-                                    <div className="space-y-4 mt-auto">
-                                        <div className="flex justify-between items-center py-2 border-b border-slate-200/50">
-                                            <span className="text-sm font-semibold text-slate-500">Total Questions:</span>
-                                            <span className="text-sm font-bold text-[#003B6B]">100</span>
-                                        </div>
-                                        <div className="flex justify-between items-center py-2 border-b border-slate-200/50">
-                                            <span className="text-sm font-semibold text-slate-500">Total Marks:</span>
-                                            <span className="text-sm font-bold text-[#003B6B]">100</span>
-                                        </div>
-                                        <div className="flex justify-between items-center py-2 border-b border-slate-200/50">
-                                            <span className="text-sm font-semibold text-slate-500">Duration:</span>
-                                            <span className="text-sm font-bold text-[#003B6B]">120 Minutes</span>
-                                        </div>
-                                        <div className="flex justify-between items-center py-2">
-                                            <span className="text-sm font-semibold text-slate-500">Question Type:</span>
-                                            <span className="text-sm font-bold text-[#003B6B]">Multiple Choice (MCQ)</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                </main>
-            </div>
+    const dispatch = useDispatch();
+    const location = useLocation();
+    const { selectedPackage, selectedInternalService } = useSelector((s: RootState) => s.detailed);
 
-        </section>
-
-    )
-}
-
-const SideBar = () => {
-    const dispatch = useDispatch()
     const packageApi = useGetPackageQuery({});
-    const [logoutApi] = useLogoutUserMutation()
-    const [packageList, setPackageList] = useState<any[]>([]);
-    const { selectedPackage } = useSelector((s: RootState) => s.detailed)
+    const serviceApi = useMcqExamServiceTypeQuery({
+        PackageId: selectedPackage?.PackageId
+    }, { skip: isNaN(Number(selectedPackage?.PackageId)) });
+    const mcqApi = useGetMcqQuery({
+        PackageId: selectedPackage?.PackageId,
+    }, { skip: isNaN(Number(selectedPackage?.PackageId)) });
+
+    const [packageList, setPackageList] = useState<IPackage[]>([]);
+    const [serviceOptions, setServiceOptions] = useState<InternalService[]>([]);
+    const [mcqList, setMcqList] = useState<TblMasterMCQSet[]>([]);
 
 
     useEffect(() => {
@@ -175,6 +53,69 @@ const SideBar = () => {
         }
     }, [packageApi]);
 
+    useEffect(() => {
+        if (mcqApi.isError) {
+            rtkErrorRead(mcqApi.error);
+        } else {
+            const data = convertData(mcqApi?.data?.result);
+            if (data && data.length > 0) {
+                setMcqList(data[0]?.TblMasterMCQSet ?? []);
+                // console.log(data[0]?.TblMasterMCQSet ?? [])
+            }
+        }
+    }, [mcqApi]);
+
+    useEffect(() => {
+        if (serviceApi.isError) {
+            rtkErrorRead(serviceApi.error)
+        } else {
+            const data = convertData(serviceApi?.data?.result) || []
+            setServiceOptions(data)
+            if (selectedInternalService == null) {
+                dispatch(setSelectedInternalService(data[0]))
+            }
+        }
+    }, [serviceApi])
+
+    const { state } = location;
+
+    useEffect(() => {
+        if (!isNaN(Number(state?.packageId))) {
+            dispatch(setSelectedPackage({ PackageId: Number(state.packageId) }))
+        }
+        if (!isNaN(Number(state?.examId))) {
+            const { examId } = state
+            const exam = mcqList.find((m) => Number(m.MCQSetId) === Number(examId))
+            if (exam) {
+                const examService = serviceOptions.find((s) => Number(s.InternelServiceId) === Number(exam.InternelServiceId))
+                if (examService) {
+                    dispatch(setSelectedInternalService(examService))
+                }
+            }
+        }
+    }, [state, mcqList, serviceOptions])
+
+    return (
+        <section className="bg-main-bg text-slate-800">
+            <div className="flex h-screen overflow-hidden">
+                <SideBar packageList={packageList} />
+                <main className="flex-1 overflow-y-auto p-8 space-y-8">
+                    <Header />
+                    <ExamTypeSelection options={serviceOptions} />
+                    <MyExams mcqList={mcqList.filter((m) => Number(m.InternelServiceId) === Number(selectedInternalService?.InternelServiceId))} />
+                </main>
+            </div>
+
+        </section>
+
+    )
+}
+
+const SideBar = ({ packageList }: { packageList: IPackage[] }) => {
+    const dispatch = useDispatch();
+    const [logoutApi] = useLogoutUserMutation();
+    const { selectedPackage } = useSelector((s: RootState) => s.detailed)
+
     const handlePackageClick = (pkg: any) => {
         dispatch(setSelectedPackage(pkg))
     };
@@ -189,7 +130,6 @@ const SideBar = () => {
             window.location.replace("/");
         }
     }
-
 
     return (
         <aside className="w-72 h-full bg-background-light border-r border-blue-100 flex flex-col shrink-0">
@@ -206,7 +146,7 @@ const SideBar = () => {
                                     <button
                                         key={p.PackageId}
                                         onClick={() => handlePackageClick(p)}
-                                        className="w-full py-2.5 mx-2 px-4 bg-primary text-yellow-50 font-bold rounded-full shadow-md hover:bg-primary-hover text-sm tracking-wide active:bg-primary-active">
+                                        className={`${p.PackageId === selectedPackage?.PackageId ? "bg-primary text-yellow-50" : "bg-transparent text-primary"} border-2 border-primary w-full py-2.5 mx-2 px-4  font-bold rounded-full shadow-md text-sm tracking-wide`}>
                                         {p.PackageName}
                                     </button>
                                 )
@@ -217,11 +157,224 @@ const SideBar = () => {
             </div>
             <div className="p-8">
                 <button onClick={handelLogout}
-                    className="w-full py-3 px-4 bg-secondary text-secondary-foreground font-bold rounded-xl flex items-center justify-center gap-2 bg-secondary hover:bg-secondary-hover">
+                    className="w-full py-3 px-4 bg-secondary text-secondary-foreground font-bold rounded-xl flex items-center justify-center gap-2 hover:bg-secondary-hover">
                     Sign out
                 </button>
             </div>
         </aside>
+    )
+}
+
+const Header = () => {
+
+    const user = useUserData();
+
+    return (
+        <section className="bg-[#DCE9F9] rounded-3xl p-8 relative overflow-hidden flex shadow">
+            <div className="relative z-10 max-w-2xl">
+                <h1 className="text-3xl font-bold text-[#003B6B]">Welcome To better Learning,
+                    <span className="text-primary ml-2 font-bold">{user.FullName}</span></h1>
+                <p className="text-[#003B6B]/70 mt-2 font-medium italic">Best, no-risk heading</p>
+                <div className="mt-6 inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
+                    <span className="text-primary text-sm font-bold">Ready to start your test? Give it your best!
+                        ✨</span>
+                </div>
+            </div>
+            <div className="absolute right-10 my-auto ">
+                <span className="text-9xl font-black text-secondary-light/10 uppercase">p2t</span>
+            </div>
+        </section>
+    )
+}
+
+const ExamTypeSelection = ({ options }: { options: InternalService[] }) => {
+    const dispatch = useDispatch();
+    const { selectedInternalService } = useSelector((s: RootState) => s.detailed)
+
+
+    return (
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {options.map((o) => {
+                return (
+                    <div key={`et-${o.InternelServiceId}`} className={`${selectedInternalService?.InternelServiceId === o.InternelServiceId ? 'bg-[#FDE7C1] border-orange-200/50' : 'bg-[#E1EDF9] border-blue-200/50'}  p-6 rounded-2xl flex flex-col border shadow`}>
+                        <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center mb-4 shadow-sm">
+                            {/* <span className="material-symbols-outlined text-primary">lightbulb</span> */}
+                            <PiExam />
+                        </div>
+                        <h3 className="font-bold text-lg mb-2 text-slate-800">{o.ServicesTypeName}</h3>
+                        <p className="text-sm text-slate-600 flex-1 leading-relaxed">{o.Explanation}</p>
+                        <button onClick={() => dispatch(setSelectedInternalService(o))} className="mt-4 flex items-center gap-2 text-slate-800 font-bold text-sm" >
+                            Get started
+                        </button>
+                    </div>
+                )
+            })}
+        </section>
+    )
+}
+
+const MyExams = ({ mcqList }: { mcqList: TblMasterMCQSet[] }) => {
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const { selectedInternalService, selectedMcqSet } = useSelector((s: RootState) => s.detailed)
+    const [paperModal, setPaperModal] = useState<boolean>(false);
+
+    function getExamMeta(e: TblMasterMCQSet) {
+        let duration = 0
+        let marks = 0
+        let noOfQus = 0;
+        let paperCount = 0;
+
+        e.TblMasterMCQPaper?.forEach((p) => {
+            duration += p.PaperDuration ?? 0;
+            marks += p.TotalMarks ?? 0;
+            paperCount += 1;
+            p?.TblMasterMCQSection?.forEach((s) => {
+                noOfQus += s.MinQuestionAttempt ?? 0;
+            })
+        })
+
+        return { duration, marks, noOfQus, paperCount }
+    }
+
+    const handleSelectPaper = (p: TblMasterMCQPaper) => {
+        dispatch(setSelectedMCQPaper({
+            PaperType: selectedInternalService?.ServicesTypeName,
+            ...p
+        }))
+
+        navigate('/paper')
+    }
+
+
+    return (
+        <>
+            <section className="space-y-6">
+                <div className="flex items-center justify-between">
+                    <h2 className="text-xl font-bold text-[#003B6B]">My Exams</h2>
+                </div>
+                {mcqList.length === 0 && (
+                    <p className="text-secondary-active mt-4">No exam found</p>
+                )}
+                <div className="grid grid-cols-4 gap-6">
+                    {mcqList.map((m) => {
+                        const meta = getExamMeta(m);
+
+                        return (
+                            <div
+                                key={`exam-${m.MCQSetId}`}
+                                className="max-w-sm w-full bg-white border border-slate-200 border-b-secondary-active rounded-xl border-b-4 shadow-sm hover:shadow-md transition-shadow duration-200"
+                            >
+                                {/* Header */}
+                                <div className="bg-secondary rounded-t-xl px-6 py-5">
+                                    <h2 className="text-white font-semibold text-lg tracking-tight">
+                                        {m.MCQSetName}
+                                    </h2>
+
+                                    <div className="mt-3 space-y-1 text-sm text-slate-300">
+                                        {!!m.MCQFromDate && (
+                                            <p>
+                                                <span className="font-medium text-slate-400">From:</span>{" "}
+                                                {format(new Date(m.MCQFromDate), "dd-MM-yyyy")}
+                                            </p>
+                                        )}
+                                        {!!m.MCQUptoDate && (
+                                            <p>
+                                                <span className="font-medium text-slate-400">To:</span>{" "}
+                                                {format(new Date(m.MCQUptoDate), "dd-MM-yyyy")}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                                {/* Body */}
+                                <div className="px-6 py-5 space-y-4 text-sm">
+                                    <div className="flex justify-between border-b border-slate-100 pb-2">
+                                        <span className="text-slate-500">Total Questions</span>
+                                        <span className="font-semibold text-slate-800">{meta.noOfQus}</span>
+                                    </div>
+
+                                    <div className="flex justify-between border-b border-slate-100 pb-2">
+                                        <span className="text-slate-500">Total Marks</span>
+                                        <span className="font-semibold text-slate-800">{meta.marks}</span>
+                                    </div>
+
+                                    <div className="flex justify-between border-b border-slate-100 pb-2">
+                                        <span className="text-slate-500">Duration</span>
+                                        <span className="font-semibold text-slate-800">{examTimeFormatter(meta.duration)}</span>
+                                    </div>
+
+                                    <div className="flex justify-between">
+                                        <span className="text-slate-500">Papers</span>
+                                        <span className="font-semibold text-slate-800">{meta.paperCount}</span>
+                                    </div>
+                                </div>
+
+                                {/* Footer */}
+                                <div className="px-6 pb-6">
+                                    <button
+                                        className="w-full bg-primary hover:bg-primary-hover text-primary-foreground rounded-lg font-medium py-3 transition-colors duration-200"
+                                        onClick={() => {
+                                            dispatch(setSelectedMCQSet(m))
+                                            setPaperModal(true)
+                                        }}
+                                    >
+                                        Show Papers
+                                    </button>
+                                </div>
+                            </div>
+                        )
+                    })}
+                </div>
+            </section>
+            <ModalComp2
+                open={!!paperModal}
+                onClose={() => {
+                    setPaperModal(false)
+                    dispatch(setSelectedMCQSet({}))
+                }}
+                title="View Papers"
+            >
+                <div className="space-y-3">
+                    {selectedMcqSet?.TblMasterMCQPaper?.length === 0 && (
+                        <p className="text-secondary-active mt-4">No paper found</p>
+                    )}
+
+                    {selectedMcqSet?.TblMasterMCQPaper?.map((p) => (
+                        <div
+                            key={`paper-${p.MCQPaperId}`}
+                            className="bg-white border border-slate-200 rounded-lg px-4 py-3 flex items-center justify-between shadow-sm"
+                        >
+                            {/* Left Content */}
+                            <div className="flex-1 min-w-0">
+                                <h3 className="text-sm font-semibold text-slate-800 truncate">
+                                    {p.MCQPaperName}
+                                </h3>
+
+                                <div className="flex flex-wrap gap-4 mt-1 text-xs text-slate-500">
+                                    {!!p.MCQPaperStartDate && (
+                                        <span><b className="text-secondary">Start:</b> {format(new Date(p.MCQPaperStartDate), "dd-MM-yyyy HH:mm a")}</span>
+                                    )}
+                                    {!!p.PaperDuration && (
+                                        <span><b className="text-secondary">Duration:</b> {examTimeFormatter(p.PaperDuration)}</span>
+                                    )}
+                                    <span><b className="text-secondary">Marks:</b> {p.TotalMarks}</span>
+                                </div>
+                            </div>
+
+                            {/* Right Button */}
+                            <div className="ml-4">
+                                <button
+                                    className="bg-primary hover:bg-primary-hover text-primary-foreground text-xs font-medium px-4 py-2 rounded-md transition-colors duration-200"
+                                    onClick={() => handleSelectPaper(p)}
+                                >
+                                    Start
+                                </button>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </ModalComp2>
+        </>
     )
 }
 

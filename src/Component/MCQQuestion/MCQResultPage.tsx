@@ -11,7 +11,7 @@ import { useSubmitAnswerMutation, useSubmitExamMutation } from "../../Api/spAppA
 import MathMLComp from "../../Helper/MathMlComp";
 import rtkErrorRead from "../../Helper/rtkErrorRead";
 import toastNotify from "../../Helper/ToastNotify";
-import { TblMasterMcqAnswer } from "../../interface/McqQuestion";
+import { TblMasterMcqAnswer } from "../../interface/MCQQuestion";
 import { resetSelectedOptions } from "../../Store/Slice/McqSlice";
 import { RootState } from "../../Store/Store";
 import IconClock from "../Icon/IconClock";

@@ -1,14 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import MCQPaper from "../../interface/MCQPaper";
-import MCQSet from "../../interface/MCQSet";
+
 import { IPackage } from "../../interface/Package";
+import { InternalService } from "../../interface/InternalService";
+import TblMasterMCQSet from "../../interface/MCQSet";
+import TblMasterMCQPaper from "../../interface/MCQPaper";
 
 interface IDetailed {
   selectedExamTypeTab: number;
-  selectedMcqSet: MCQSet;
-  selectedMcqPaper: MCQPaper;
+  selectedMcqSet: TblMasterMCQSet;
+  selectedMcqPaper: TblMasterMCQPaper;
   examStartTime: string;
   selectedPackage: IPackage | null
+  selectedInternalService: InternalService | null
 }
 
 const initialState: IDetailed = {
@@ -16,7 +19,8 @@ const initialState: IDetailed = {
   selectedMcqPaper: {},
   selectedMcqSet: {},
   examStartTime: "",
-  selectedPackage: null
+  selectedPackage: null,
+  selectedInternalService: null
 };
 
 const DetailedSlice = createSlice({
@@ -26,10 +30,10 @@ const DetailedSlice = createSlice({
     setExamTypeTab: (state, action: PayloadAction<number>) => {
       state.selectedExamTypeTab = action.payload;
     },
-    setSelectedMCQSet: (state, action: PayloadAction<MCQSet>) => {
+    setSelectedMCQSet: (state, action: PayloadAction<TblMasterMCQSet>) => {
       state.selectedMcqSet = action.payload;
     },
-    setSelectedMCQPaper: (state, action: PayloadAction<MCQPaper>) => {
+    setSelectedMCQPaper: (state, action: PayloadAction<TblMasterMCQPaper>) => {
       state.selectedMcqPaper = action.payload;
     },
     setExamStartTime: (state, action: PayloadAction<string>) => {
@@ -37,6 +41,9 @@ const DetailedSlice = createSlice({
     },
     setSelectedPackage: (state, action: PayloadAction<IPackage>) => {
       state.selectedPackage = action.payload
+    },
+    setSelectedInternalService: (state, action: PayloadAction<InternalService>) => {
+      state.selectedInternalService = action.payload
     }
   },
 });
@@ -46,6 +53,7 @@ export const {
   setSelectedMCQSet,
   setSelectedMCQPaper,
   setExamStartTime,
-  setSelectedPackage
+  setSelectedPackage,
+  setSelectedInternalService
 } = DetailedSlice.actions;
 export default DetailedSlice.reducer;

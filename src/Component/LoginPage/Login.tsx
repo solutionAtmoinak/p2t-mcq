@@ -47,7 +47,7 @@ const LoginPage: React.FC = () => {
   }, [getCaptcha]);
 
   useEffect(() => {
-    console.log({ examTypeParam, examIdParam, packageIdParam })
+    // console.log({ examTypeParam, examIdParam, packageIdParam })
 
     const searchToken = jwtSearchParam || tokenSearchParam || "";
     const storageToken = localStorage.getItem("token") || "";
