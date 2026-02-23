@@ -2,7 +2,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import LoginPage from "./Component/LoginPage/Login";
 import TokenLogin from "./Component/LoginPage/TokenLogin";
-import MCQResultPage from "./Component/MCQQuestion/MCQResultPage";
 import ThankYouPage from "./Component/MCQQuestion/ThankYouPage";
 import HomePage from "./Component/Package/HomePage";
 import TestSeriesPage from "./Component/Package/TestSeries";
@@ -12,6 +11,7 @@ import QuestionPage2 from "./Component/MCQQuestion/QuestionPage2";
 import ResultPage2 from "./Component/MCQQuestion/ResultPage2";
 
 // import MCQPage from "./Component/Package/MCQPage";
+// import MCQResultPage from "./Component/MCQQuestion/MCQResultPage";
 // import MCQQuestionPage from "./Component/MCQQuestion/MCQQuestionPage";
 
 function App() {
