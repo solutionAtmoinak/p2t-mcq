@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import React, { useEffect, useRef, useState } from "react";
+import { FaSave } from "react-icons/fa";
 import { GrLinkNext, GrLinkPrevious } from "react-icons/gr";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -20,7 +21,6 @@ import DrawerComp from "../Common/DrawerComp";
 import IconClock from "../Icon/IconClock";
 import IconInstruction from "../Icon/IconInstruction";
 import ExamSubmitModal from "./ExamSubmitModal";
-import { FaSave } from "react-icons/fa";
 
 
 
@@ -47,7 +47,7 @@ const QuestionPage2: React.FC = () => {
     const [formattedTime, setFormattedTime] = useState<string>('');
     const [flatQusList, setFlatQusList] = useState<TblMasterMCQQuestion[]>([]);
     const [textInputAnswers, setTextInputAnswers] = useState<string[]>([]);
-    const [markedQuestions, setMarkedQuestions] = useState<boolean[]>([]);
+    // const [markedQuestions, setMarkedQuestions] = useState<boolean[]>([]);
 
     const [reviewQusId, setReviewQusId] = useState<number[]>([]);
 
@@ -111,7 +111,7 @@ const QuestionPage2: React.FC = () => {
             setSectionWiseQuestions(sectionWiseQuestions);
             setFlatQusList(allMcqQuestions);
             setAnsweredOptText(Array(allMcqQuestions.length).fill(""));
-            setMarkedQuestions(Array(allMcqQuestions.length).fill(false));
+            // setMarkedQuestions(Array(allMcqQuestions.length).fill(false));
             setTextInputAnswers(Array(allMcqQuestions.length).fill(""));
             dispatch(setQuestionList(allMcqQuestions));
         }
@@ -346,11 +346,12 @@ const QuestionPage2: React.FC = () => {
         }
     };
 
-    const getClassForButton = (qusNo: number, qusId: number) => {
+    const getClassQusIndex = (qusNo: number, qusId: number) => {
         const isAnswered =
             (answeredOptText[qusNo] && answeredOptText[qusNo].length > 0) ||
             (textInputAnswers[qusNo] && textInputAnswers[qusNo].length > 0);
         const isMarked = reviewQusId.includes(qusId);
+        const isCurrent = (selectedQuestionIndex - 1) === qusNo;
 
         const base = 'h-12 w-12 font-semibold text-secondary-dark '
 
@@ -360,6 +361,8 @@ const QuestionPage2: React.FC = () => {
             return base + 'bg-primary rounded-full';
         } else if (isMarked) {
             return base + 'border-2 border-secondary rounded-lg';
+        } else if (isCurrent) {
+            return base + 'border-2 border-primary rounded-full';
         } else {
             return base + 'border border-secondary rounded-full';
         }
@@ -427,7 +430,7 @@ const QuestionPage2: React.FC = () => {
                 setSelectedQuestionIndex(1);
                 setSelectedAnsWithCorrect([]);
                 setAnsweredOptText([]);
-                setMarkedQuestions([]);
+                setReviewQusId([]);
                 setSelectedAnswersText([]);
             }
         })
@@ -784,14 +787,14 @@ const QuestionPage2: React.FC = () => {
                                                 </h3>
                                             </div>
 
-                                            <div className="grid grid-cols-8 gap-4 mb-6">
+                                            <div className="grid grid-cols-5 lg:grid-cols-6 xl:grid-cols-8 gap-4 mb-6">
                                                 {s?.questions?.map(
                                                     (q: TblMasterMCQQuestion, qi: number) => {
                                                         const questionNumber = flatQusList.findIndex((id: TblMasterMCQQuestion) => id.MCQQuestionId === q.MCQQuestionId);
                                                         return (
                                                             <button
                                                                 key={`qusOpt-${si}-${qi}`}
-                                                                className={getClassForButton(questionNumber, Number(q.MCQQuestionId))}
+                                                                className={getClassQusIndex(questionNumber, Number(q.MCQQuestionId))}
                                                                 onClick={() => {
                                                                     setActiveSection(si);
                                                                     handleQuestionClick(questionNumber + 1);

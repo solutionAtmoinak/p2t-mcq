@@ -100,7 +100,8 @@ const LoginPage: React.FC = () => {
       }
 
       // Fallback: valid local token → homepage
-      navigate('/HomePage');
+      // navigate('/HomePage');
+      navigate('/mcq');
     })
       .catch((err) => {
         console.log(err);
@@ -134,7 +135,8 @@ const LoginPage: React.FC = () => {
     } else {
       const { token } = res.data?.result
       localStorage.setItem('token', token)
-      navigate("/HomePage")
+      // navigate("/HomePage")
+      navigate('/mcq')
     }
   };
 

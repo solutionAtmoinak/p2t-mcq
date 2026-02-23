@@ -270,6 +270,7 @@ const ResultPage2 = () => {
 
     async function downloadCertificate() {
         const res = await downloadCertificateApi({
+            MCQSetId: selectedMcqPaper?.MCQSetId,
             PaperId: selectedMcqPaper?.MCQPaperId,
             PackageId: packageId,
             CertificateType: 'Mcq'
