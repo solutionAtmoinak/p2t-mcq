@@ -376,7 +376,7 @@ const QuestionPage2: React.FC = () => {
         if (isQuickPractice) {
             const selectedAnswer = selectedAnswersText[selectedQuestionIndex - 1];
 
-            if (Object.keys(selectedAnswer).length === 0) return base + "border-2 border-primary";
+            if (Object.keys(selectedAnswer ?? {}).length === 0) return base + "border-2 border-primary";
             const selectedOptions = selectedAnswer.options;
             const correctOptions = flatQusList[
                 selectedQuestionIndex - 1
@@ -717,8 +717,19 @@ const QuestionPage2: React.FC = () => {
                                                     })
                                                 }
                                             >
-                                                <b>{String.fromCharCode(65 + qus)}.{" "}</b>
-                                                <MathMLComp data={option?.MCQOption ?? ""} />
+                                                {!!option.MCQOptionDocumentUrl ?
+                                                    <div className="flex flex-col">
+                                                        <div className='flex items-center gap-2 w-full justify-center mb-2'>
+                                                            <b>{String.fromCharCode(65 + qus)}.{" "}</b>
+                                                            <img src={option?.MCQOptionDocumentUrl} alt="mcq-option" />
+                                                        </div>
+                                                        <MathMLComp data={option?.MCQOption ?? ""} />
+                                                    </div> :
+                                                    <>
+                                                        <b>{String.fromCharCode(65 + qus)}.{" "}</b>
+                                                        <MathMLComp data={option?.MCQOption ?? ""} />
+                                                    </>
+                                                }
                                             </button>
                                         )
                                     )
@@ -880,27 +891,27 @@ const QusLegend = () => {
         <div className="mt-auto w-full">
             <hr />
             <h3 className="text-xl font-bold pt-4 px-4">User Guide</h3>
-            <div className="flex justify-evenly p-4 w-full">
+            <div className="grid 2xl:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-4 p-4 w-full">
                 <div className="flex flex-col items-center">
                     <div className="w-6 h-6 border border-secondary rounded-full mr-2"></div>
-                    <span className="text-sm">Unanswered</span>
+                    <span className="text-xs">Unanswered</span>
                 </div>
 
                 <div className="flex flex-col items-center">
                     <div className="w-6 h-6 bg-primary rounded-full mr-2"></div>
-                    <span className="text-sm">Answered</span>
+                    <span className="text-xs">Answered</span>
                 </div>
 
                 <div className="flex flex-col items-center">
                     <div className="w-6 h-6 border border-secondary rounded-lg mr-2"></div>
-                    <span className="text-sm max-w-[150px]">Marked for review</span>
+                    <span className="text-xs max-w-[150px]">Marked for review</span>
                 </div>
 
 
                 {/* Gradient color: Answered & Marked for Review */}
                 <div className="flex items-center flex-col">
                     <div className="w-6 h-6 rounded-lg bg-primary shadow shadow-black"></div>
-                    <span className="text-sm max-w-[150px]">
+                    <span className="text-xs max-w-[150px]">
                         Answered & Marked for Review
                     </span>
                 </div>

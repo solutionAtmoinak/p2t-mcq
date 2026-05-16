@@ -1,6 +1,6 @@
 interface TblMasterMCQQuestion
   extends TblMasterMcqAnswerDescription,
-    TblMasterMCQPassage {
+  TblMasterMCQPassage {
   MCQSetId?: number | string;
   MCQQuestionId?: number | string;
   MCQQuestion?: string;
@@ -33,6 +33,8 @@ interface TblMasterMcqAnswer {
   IsCorrect?: boolean;
   MCQPartialCorrectMarks?: number;
   MCQPartialNegativeMarks?: number;
+  MCQOptionDocumentUrl?: string;
+  MCQOptionDocumentId?: number;
   index?: number;
   OneWordAnswer?: string;
 }

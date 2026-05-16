@@ -36,6 +36,9 @@ const MCQQuestionPage: React.FC = () => {
   const { selectedMcqPaper } = useSelector((s: RootState) => s.detailed)
   const { mcqQuestionList: AllQusListRaw, selectedOptions } = useSelector((state: RootState) => state.mcqQuestion);
 
+
+
+
   const mcqQuestionsApi = useGetMcqQuery({
     PackageId: location.state.packageId ? location.state.packageId : "",
   });
@@ -862,8 +865,19 @@ const MCQQuestionPage: React.FC = () => {
                             )
                           }
                         >
-                          {String.fromCharCode(65 + qus)}.{" "}
-                          <MathMLComp data={option?.MCQOption ?? ""} />
+                          {!!option.MCQOptionDocumentUrl ?
+                            <div className="flex flex-col">
+                              <div>
+                                {String.fromCharCode(65 + qus)}.{" "}
+                                <img src={option?.MCQOptionDocumentUrl} alt="mcq-option" />
+                              </div>
+                              <MathMLComp data={option?.MCQOption ?? ""} />
+                            </div> :
+                            <>
+                              {String.fromCharCode(65 + qus)}.{" "}
+                              <MathMLComp data={option?.MCQOption ?? ""} />
+                            </>
+                          }
                         </button>
                       )
                     )

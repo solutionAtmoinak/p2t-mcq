@@ -145,10 +145,10 @@ const PaperPage2 = () => {
                 <h1 className="text-5xl font-bold text-secondary mb-6">
                     {paper.MCQPaperName}
                 </h1>
-                <div className="inline-flex items-center gap-2 bg-primary text-secondary px-4 py-2 rounded-full font-semibold shadow-sm">
+                {/* <div className="inline-flex items-center gap-2 bg-primary text-secondary px-4 py-2 rounded-full font-semibold shadow-sm">
                     <CgSandClock />
                     {!!paper.MCQStartTime && <span>{`Start Time ${format(new Date(paper.MCQStartTime), 'HH:mm aa')}`}</span>}
-                </div>
+                </div> */}
             </header>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
                 <div

@@ -73,6 +73,7 @@ const MCQPage2 = () => {
             setServiceOptions(data)
             if (selectedInternalService == null) {
                 dispatch(setSelectedInternalService(data[0]))
+                setMcqList([])
             }
         }
     }, [serviceApi])
@@ -102,7 +103,7 @@ const MCQPage2 = () => {
                 <main className="flex-1 overflow-y-auto p-8 space-y-8">
                     <Header />
                     <ExamTypeSelection options={serviceOptions} />
-                    <MyExams mcqList={mcqList.filter((m) => Number(m.InternelServiceId) === Number(selectedInternalService?.InternelServiceId))} />
+                    <MyExams mcqList={!!serviceOptions?.length ? mcqList.filter((m) => Number(m.InternelServiceId) === Number(selectedInternalService?.InternelServiceId)) : []} />
                 </main>
             </div>
 
@@ -171,10 +172,10 @@ const Header = () => {
 
     return (
         <section className="bg-[#DCE9F9] rounded-3xl p-8 relative overflow-hidden flex shadow">
-            <div className="relative z-10 max-w-2xl">
+            <div className="relative z-10">
                 <h1 className="text-3xl font-bold text-[#003B6B]">Welcome To better Learning,
                     <span className="text-primary ml-2 font-bold">{user.FullName}</span></h1>
-                <p className="text-[#003B6B]/70 mt-2 font-medium italic">Best, no-risk heading</p>
+                {/* <p className="text-[#003B6B]/70 mt-2 font-medium italic">Best, no-risk heading</p> */}
                 <div className="mt-6 inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
                     <span className="text-primary text-sm font-bold">Ready to start your test? Give it your best!
                         ✨</span>
