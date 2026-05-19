@@ -21,7 +21,7 @@ const DrawerComp = (props: DrawerCompProps) => {
       className={props.className}
     >
       <Drawer.Header>
-        <Drawer.Title className={props.headerClassName}>{props.title}</Drawer.Title>
+       {!!props.title &&  <Drawer.Title className={props.headerClassName}>{props.title}</Drawer.Title>}
         {props.action &&
           <Drawer.Actions>
             {props.action}

@@ -1,0 +1,63 @@
+.rs-drawer-left.rs-drawer-xs,
+.rs-drawer-right.rs-drawer-xs {
+  width: 360px;
+}
+
+.rs-drawer-actions {
+    font-size: 22px;
+    font-weight: bold;
+    margin: 0 auto;
+    color: #003b6b;
+}
+
+.rs-drawer-body {
+  padding: 12px 24px;
+}
+
+.exam-type-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #003b6b #e5e7eb;
+}
+
+.exam-type-scroll::-webkit-scrollbar {
+  height: 8px;
+}
+
+.exam-type-scroll::-webkit-scrollbar-track {
+  background: #e5e7eb;
+  border-radius: 999px;
+}
+
+.exam-type-scroll::-webkit-scrollbar-thumb {
+  background: #003b6b;
+  border-radius: 999px;
+}
+
+.exam-type-scroll::-webkit-scrollbar-thumb:hover {
+  background: #002f55;
+}
+
+.instruction-content ol,
+.instruction-content ul {
+  padding-left: 1.25rem;
+  margin: 0;
+}
+
+.instruction-content li {
+  margin-bottom: 0.5rem;
+}
+
+.instruction-content p {
+  margin-bottom: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .instruction-content {
+    border-radius: 1.25rem;
+  }
+
+  .instruction-content ol,
+  .instruction-content ul {
+    padding-left: 1rem;
+  }
+}
