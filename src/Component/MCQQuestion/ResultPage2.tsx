@@ -414,19 +414,19 @@ const ResultPage2 = () => {
 
       <section className="mt-8">
         <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
-          <button
+          {/* <button
             onClick={downloadCertificate}
             className="w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg text-green-100 bg-amber-500 text-sm sm:text-base font-medium"
           >
             Download Certificate
-          </button>
+          </button> */}
 
-          <button
+          {/* <button
             onClick={downloadPdf}
             className="w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg text-green-100 bg-green-500 text-sm sm:text-base font-medium"
           >
             Download Answers
-          </button>
+          </button> */}
 
           <button
             className="w-full sm:w-auto px-4 py-3 sm:py-2 bg-indigo-500 rounded-lg text-indigo-100 text-sm sm:text-base font-medium"

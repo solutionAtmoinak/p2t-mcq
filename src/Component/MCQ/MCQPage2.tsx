@@ -1,5 +1,6 @@
 import { format } from "date-fns";
 import { useEffect, useState } from "react";
+import { GiHamburgerMenu } from "react-icons/gi";
 import { PiExam } from "react-icons/pi";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -8,6 +9,7 @@ import { useMcqExamServiceTypeQuery } from "../../Api/p2twebApi";
 import { useGetMcqQuery, useGetPackageQuery } from "../../Api/spAppApi";
 import convertData from "../../Helper/ConvertData";
 import toastNotify from "../../Helper/ToastNotify";
+import examTimeFormatter from "../../Helper/examTimeFormatter";
 import rtkErrorRead from "../../Helper/rtkErrorRead";
 import {
   setSelectedInternalService,
@@ -18,14 +20,12 @@ import {
 import { RootState } from "../../Store/Store";
 import useUserData from "../../hooks/userData";
 import { InternalService } from "../../interface/InternalService";
+import TblMasterMCQPaper from "../../interface/MCQPaper";
 import TblMasterMCQSet from "../../interface/MCQSet";
 import { IPackage } from "../../interface/Package";
-import ModalComp2 from "../Common/ModalComp2";
-import TblMasterMCQPaper from "../../interface/MCQPaper";
-import examTimeFormatter from "../../Helper/examTimeFormatter";
-import DrawerComp from "../Common/DrawerComp";
 import "../../styles/drawer.css";
-import { GiHamburgerMenu } from "react-icons/gi";
+import DrawerComp from "../Common/DrawerComp";
+import ModalComp2 from "../Common/ModalComp2";
 
 const MCQPage2 = () => {
   const dispatch = useDispatch();
@@ -96,7 +96,7 @@ const MCQPage2 = () => {
   const { state } = location;
 
   useEffect(() => {
-    if (!isNaN(Number(state?.packageId))) {
+    if (!isNaN(Number(state?.packageId)) && (selectedPackage === null)) {
       dispatch(setSelectedPackage({ PackageId: Number(state.packageId) }));
     }
     if (!isNaN(Number(state?.examId))) {
@@ -150,10 +150,10 @@ const MCQPage2 = () => {
             mcqList={
               !!serviceOptions?.length
                 ? mcqList.filter(
-                    (m) =>
-                      Number(m.InternelServiceId) ===
-                      Number(selectedInternalService?.InternelServiceId),
-                  )
+                  (m) =>
+                    Number(m.InternelServiceId) ===
+                    Number(selectedInternalService?.InternelServiceId),
+                )
                 : []
             }
           />
@@ -319,11 +319,10 @@ const ExamTypeSelection = ({ options }: { options: InternalService[] }) => {
           <div
             key={`et-${o.InternelServiceId}-${index}`}
             className={`
-          ${
-            selectedInternalService?.InternelServiceId === o.InternelServiceId
-              ? "bg-[#FDE7C1] border-orange-200/50"
-              : "bg-[#E1EDF9] border-blue-200/50"
-          }
+          ${selectedInternalService?.InternelServiceId === o.InternelServiceId
+                ? "bg-[#FDE7C1] border-orange-200/50"
+                : "bg-[#E1EDF9] border-blue-200/50"
+              }
           min-w-[260px] 
           p-5 sm:p-6 
           rounded-2xl 
@@ -347,7 +346,7 @@ const ExamTypeSelection = ({ options }: { options: InternalService[] }) => {
 
             <button
               onClick={() => dispatch(setSelectedInternalService(o))}
-              className="mt-4 flex items-center gap-2 text-slate-800 font-bold text-sm"
+              className="mt-4 flex items-center gap-2 text-slate-800 font-bold text-sm px-4 py-2 bg-white rounded-full w-fit shadow shadow-slate-500"
             >
               Get started
             </button>
