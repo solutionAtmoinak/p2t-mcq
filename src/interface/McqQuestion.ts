@@ -1,6 +1,5 @@
 interface TblMasterMCQQuestion
-  extends TblMasterMcqAnswerDescription,
-  TblMasterMCQPassage {
+  extends TblMasterMcqAnswerDescription, TblMasterMCQPassage {
   MCQSetId?: number | string;
   MCQQuestionId?: number | string;
   MCQQuestion?: string;
@@ -16,6 +15,11 @@ interface TblMasterMCQQuestion
   MCQQuestionUrl?: string;
   IsMultipleCorrect?: boolean;
   MCQOptions?: TblMasterMcqAnswer[];
+  // for submitted question
+  TblMasterMcqAnswer?: TblMasterMcqAnswer[];
+  SpentTime?: number;
+  SubmittedOn?: string;
+  IsAttempted?: boolean;
 }
 
 interface AllQuestionSet extends TblMasterMCQQuestion {
@@ -37,6 +41,8 @@ interface TblMasterMcqAnswer {
   MCQOptionDocumentId?: number;
   index?: number;
   OneWordAnswer?: string;
+  // for submitted question
+  IsUserSelected?: boolean;
 }
 
 interface TblMasterMcqAnswerDescription {

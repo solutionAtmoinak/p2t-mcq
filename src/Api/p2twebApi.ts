@@ -1,6 +1,6 @@
 import baseApi from "./baseApi";
 
-const baseUrl = '/AuthDataGet/ExecuteJson/SpP2TWebapi'
+const baseUrl = "/AuthDataGet/ExecuteJson/SpP2TWebapi";
 
 const p2tWebApi = baseApi.injectEndpoints({
   overrideExisting: true,
@@ -19,8 +19,19 @@ const p2tWebApi = baseApi.injectEndpoints({
         providesTags: ["p2tWebApi"],
       }),
     }),
+    fetchAnsAfterExamSubmit: builder.mutation({
+      query: (data) => ({
+        url: `${baseUrl}/31`,
+        body: data,
+        providesTags: ["p2tWebApi"],
+      }),
+    }),
   }),
 });
 
-export const { useDownloadCertificateMutation, useMcqExamServiceTypeQuery } = p2tWebApi;
+export const {
+  useDownloadCertificateMutation,
+  useMcqExamServiceTypeQuery,
+  useFetchAnsAfterExamSubmitMutation,
+} = p2tWebApi;
 export default p2tWebApi;

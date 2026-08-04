@@ -10,25 +10,32 @@ import {
 } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import examTimeFormatter from "../../Helper/examTimeFormatter";
-import { RootState } from "../../Store/Store";
+import { useFetchAnsAfterExamSubmitMutation } from "../../Api/p2twebApi";
 import {
   useFetchDbAnswersMutation,
   useSubmitExamMutation,
 } from "../../Api/spAppApi";
+import convertData from "../../Helper/ConvertData";
+import examTimeFormatter from "../../Helper/examTimeFormatter";
 import rtkErrorRead from "../../Helper/rtkErrorRead";
 import {
   loadInitialOptions,
   setSelectedPackageId,
 } from "../../Store/Slice/McqSlice";
-import { TblMasterMcqAnswer } from "../../interface/MCQQuestion";
-import "../../styles/drawer.css"
+import { RootState } from "../../Store/Store";
+import {
+  TblMasterMcqAnswer,
+  TblMasterMCQQuestion,
+} from "../../interface/MCQQuestion";
+import "../../styles/drawer.css";
+import SubmittedAnswersModal from "./SubmittedAnswersModal";
 
 const PaperPage2 = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [dbAnsApi] = useFetchDbAnswersMutation();
   const [attemptApi] = useSubmitExamMutation();
+  const [ansApi] = useFetchAnsAfterExamSubmitMutation();
 
   const {
     selectedMcqPaper: paper,
@@ -40,6 +47,8 @@ const PaperPage2 = () => {
     sectionCount: 0,
   });
   const [isAgree, setIsAgree] = useState<boolean>(false);
+  const [submittedAnsList, setSubmittedAnsList] = useState<TblMasterMCQQuestion[]>([]);
+  const [ansModalOpen, setAnsModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (Object.keys(paper).length === 0) {
@@ -66,7 +75,27 @@ const PaperPage2 = () => {
         },
       });
       if (res.error) {
-        rtkErrorRead(res.error);
+        // fetch asn to show
+        const { status } = res.error as any;
+
+        if (status === 440) {
+          if (submittedAnsList?.length === 0) {
+            const ansRes = await ansApi({ PaperId: paper.MCQPaperId });
+            if (ansRes.error) {
+              rtkErrorRead(ansRes.error);
+            } else {
+              const ans = convertData(ansRes?.data?.result) || [];
+              if (Array.isArray(ans)) {
+                setSubmittedAnsList(ans);
+                setAnsModalOpen(true);
+              }
+            }
+          } else {
+            setAnsModalOpen(true);
+          }
+        } else {
+          rtkErrorRead(res.error);
+        }
       } else {
         const data = JSON.parse(res?.data?.result);
 
@@ -217,40 +246,6 @@ const PaperPage2 = () => {
           <FaSection className="text-primary text-6xl" />
         </div>
       </div>
-      {/* <h2 className="text-xl font-bold text-secondary-dark mt-6">Exam Instruction</h2>
-            <div className='mt-6 flex  gap-6'>
-                <div className='bg-[#eef6ff] p-8 rounded-3xl max-w-[60%] list-decimal' dangerouslySetInnerHTML={{ __html: paper?.Instruction ?? '' }} />
-                <div>
-                    <div className="bg-[#fff9eb] border border-amber-200  p-6 rounded-3xl mb-8">
-                        <div className="flex items-center gap-3 mb-4">
-                            <FaRegLightbulb className='text-primary text-2xl' />
-                            <h3 className="text-secondary font-semibold">Last Minute Tip</h3>
-                        </div>
-                        <p className="text-amber-800/80 leading-relaxed text-sm">
-                            Read each question carefully before answering. Keep an eye on the timer and avoid spending too much time
-                            on a single question. Review your answers before final submission.
-                        </p>
-                    </div>
-                    <label className="flex items-start gap-4 cursor-pointer group">
-                        <div className="relative flex items-center pt-0.5">
-                            <input className="h-5 w-5 rounded bg-secondary transition-all cursor-pointer"
-                                type="checkbox" onChange={(e) => setIsAgree(e.target.checked)} checked={isAgree} />
-                        </div>
-                        <span
-                            className="text-secondary text-sm leading-relaxed group-hover:text-primary  transition-colors">
-                            Have you read and understood the instructions mentioned under the guidelines?
-                        </span>
-                    </label>
-                    <div className="mt-12">
-                        <button className="w-full flex items-center justify-center gap-3 bg-primary disabled:bg-primary-foreground text-primary-foreground disabled:text-slate-200 py-5 px-8 rounded-full font-bold text-xl disabled:cursor-not-allowed transition-all shadow-sm max-w-[300px]" disabled={!isAgree}
-                            onClick={() => handleExamStart()}
-                        >
-                            {isAgree ? <FaLockOpen /> : <FaLock />}
-                            Start Exam
-                        </button>
-                    </div>
-                </div>
-            </div> */}
 
       <h2 className="text-xl font-bold text-secondary-dark mt-6">
         Exam Instruction
@@ -306,6 +301,12 @@ const PaperPage2 = () => {
           </div>
         </div>
       </div>
+
+      <SubmittedAnswersModal
+        submittedAnsList={submittedAnsList}
+        onClose={() => setAnsModalOpen(false)}
+        open={ansModalOpen}
+      />
     </main>
   );
 };

@@ -117,7 +117,7 @@ const ResultPage2 = () => {
           QuestionAnswerListofStudent: options,
         }),
         submitExamApi({
-          CQExamHistory: {
+          MCQExamHistory: {
             ExamId: selectedMcqPaper.MCQPaperId,
             ExamType: selectedMcqPaper.PaperType,
             ExamName: selectedMcqPaper.MCQPaperName,
@@ -317,213 +317,213 @@ const ResultPage2 = () => {
         </header>
 
         <div className="grid min-h-0 flex-1 grid-rows-[minmax(240px,42dvh)_minmax(0,1fr)] gap-3 lg:grid-cols-[390px_minmax(0,1fr)] lg:grid-rows-1 xl:grid-cols-[420px_minmax(0,1fr)]">
-        <section
-          aria-label="Performance summary"
-          className="grid min-h-0 grid-cols-1 gap-3 overflow-y-auto pr-1 sm:grid-cols-2 lg:grid-cols-1"
-        >
-          <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <div className="flex items-start justify-between border-b border-slate-100 px-4 py-3">
-              <div>
+          <section
+            aria-label="Performance summary"
+            className="grid min-h-0 grid-cols-1 gap-3 overflow-y-auto pr-1 sm:grid-cols-2 lg:grid-cols-1"
+          >
+            <article className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+              <div className="flex items-start justify-between border-b border-slate-100 px-4 py-3">
+                <div>
+                  <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
+                    Your performance
+                  </p>
+                  <h2 className="mt-0.5 text-base font-bold text-secondary">
+                    Score overview
+                  </h2>
+                </div>
+                <span className="rounded-full bg-orange-50 px-2.5 py-1 text-[10px] font-bold text-primary">
+                  {performanceLabel}
+                </span>
+              </div>
+
+              <div className="grid grid-cols-[minmax(0,1fr)_120px] items-center gap-1 px-3 py-2">
+                <div className="flex min-w-0 justify-center">
+                  <ReactApexChart
+                    options={options}
+                    series={[percentage]}
+                    type="radialBar"
+                    height={180}
+                    width="100%"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="rounded-xl bg-slate-50 p-2.5">
+                    <p className="text-[10px] font-semibold text-slate-500">
+                      Marks obtained
+                    </p>
+                    <p className="mt-1 text-base font-bold text-secondary">
+                      {totalCorrectMarks.toFixed(2)}
+                      <span className="text-xs font-semibold text-slate-400">
+                        {" "}/ {TotalMarks}
+                      </span>
+                    </p>
+                  </div>
+                  <div className="rounded-xl bg-orange-50 p-2.5">
+                    <p className="text-[10px] font-semibold text-slate-500">
+                      Accuracy
+                    </p>
+                    <p className="mt-1 text-base font-bold text-primary">
+                      {answeredCount > 0
+                        ? Math.round((correctCount / answeredCount) * 100)
+                        : 0}
+                      %
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </article>
+
+            <article className="rounded-2xl border border-slate-200 bg-white shadow-sm">
+              <div className="border-b border-slate-100 px-4 py-3">
                 <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
-                  Your performance
+                  Response analysis
                 </p>
                 <h2 className="mt-0.5 text-base font-bold text-secondary">
-                  Score overview
+                  Answer distribution
                 </h2>
               </div>
-              <span className="rounded-full bg-orange-50 px-2.5 py-1 text-[10px] font-bold text-primary">
-                {performanceLabel}
-              </span>
-            </div>
 
-            <div className="grid grid-cols-[minmax(0,1fr)_120px] items-center gap-1 px-3 py-2">
-              <div className="flex min-w-0 justify-center">
-                <ReactApexChart
-                  options={options}
-                  series={[percentage]}
-                  type="radialBar"
-                  height={180}
-                  width="100%"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <div className="rounded-xl bg-slate-50 p-2.5">
-                  <p className="text-[10px] font-semibold text-slate-500">
-                    Marks obtained
-                  </p>
-                  <p className="mt-1 text-base font-bold text-secondary">
-                    {totalCorrectMarks.toFixed(2)}
-                    <span className="text-xs font-semibold text-slate-400">
-                      {" "}/ {TotalMarks}
-                    </span>
-                  </p>
-                </div>
-                <div className="rounded-xl bg-orange-50 p-2.5">
-                  <p className="text-[10px] font-semibold text-slate-500">
-                    Accuracy
-                  </p>
-                  <p className="mt-1 text-base font-bold text-primary">
-                    {answeredCount > 0
-                      ? Math.round((correctCount / answeredCount) * 100)
-                      : 0}
-                    %
-                  </p>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <article className="rounded-2xl border border-slate-200 bg-white shadow-sm">
-            <div className="border-b border-slate-100 px-4 py-3">
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
-                Response analysis
-              </p>
-              <h2 className="mt-0.5 text-base font-bold text-secondary">
-                Answer distribution
-              </h2>
-            </div>
-
-            <div className="p-3">
-              <div className="grid grid-cols-2 gap-2">
-                <div className="rounded-xl border border-orange-100 bg-orange-50 p-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">
-                        Answered
-                      </p>
-                      <p className="mt-1 text-xl font-bold text-secondary">
-                        {answeredCount}
-                      </p>
+              <div className="p-3">
+                <div className="grid grid-cols-2 gap-2">
+                  <div className="rounded-xl border border-orange-100 bg-orange-50 p-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">
+                          Answered
+                        </p>
+                        <p className="mt-1 text-xl font-bold text-secondary">
+                          {answeredCount}
+                        </p>
+                      </div>
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-white">
+                        <IoDocumentTextOutline className="text-lg" />
+                      </span>
                     </div>
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary text-white">
-                      <IoDocumentTextOutline className="text-lg" />
-                    </span>
+                    <div className="mt-2 h-1 overflow-hidden rounded-full bg-orange-100">
+                      <div
+                        className="h-full rounded-full bg-primary"
+                        style={{ width: `${question.length ? (answeredCount / question.length) * 100 : 0}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="mt-2 h-1 overflow-hidden rounded-full bg-orange-100">
-                    <div
-                      className="h-full rounded-full bg-primary"
-                      style={{ width: `${question.length ? (answeredCount / question.length) * 100 : 0}%` }}
-                    />
+
+                  <div className="rounded-xl border border-green-100 bg-green-50 p-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">
+                          Correct
+                        </p>
+                        <p className="mt-1 text-xl font-bold text-secondary">
+                          {correctCount}
+                        </p>
+                      </div>
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-500 text-white">
+                        <IoCheckmarkCircleOutline className="text-xl" />
+                      </span>
+                    </div>
+                    <div className="mt-2 h-1 overflow-hidden rounded-full bg-green-100">
+                      <div
+                        className="h-full rounded-full bg-green-500"
+                        style={{ width: `${answeredCount ? (correctCount / answeredCount) * 100 : 0}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-red-100 bg-red-50 p-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">
+                          Incorrect
+                        </p>
+                        <p className="mt-1 text-xl font-bold text-secondary">
+                          {incorrectCount}
+                        </p>
+                      </div>
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-500 text-white">
+                        <IoCloseCircleOutline className="text-xl" />
+                      </span>
+                    </div>
+                    <div className="mt-2 h-1 overflow-hidden rounded-full bg-red-100">
+                      <div
+                        className="h-full rounded-full bg-red-500"
+                        style={{ width: `${answeredCount ? (incorrectCount / answeredCount) * 100 : 0}%` }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="rounded-xl border border-blue-100 bg-[#EEF6FD] p-3">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">
+                          Unanswered
+                        </p>
+                        <p className="mt-1 text-xl font-bold text-secondary">
+                          {unansweredCount}
+                        </p>
+                      </div>
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary text-white">
+                        <IoHelpCircleOutline className="text-xl" />
+                      </span>
+                    </div>
+                    <div className="mt-2 h-1 overflow-hidden rounded-full bg-blue-100">
+                      <div
+                        className="h-full rounded-full bg-secondary"
+                        style={{ width: `${question.length ? (unansweredCount / question.length) * 100 : 0}%` }}
+                      />
+                    </div>
                   </div>
                 </div>
 
-                <div className="rounded-xl border border-green-100 bg-green-50 p-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">
-                        Correct
-                      </p>
-                      <p className="mt-1 text-xl font-bold text-secondary">
-                        {correctCount}
-                      </p>
-                    </div>
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-green-500 text-white">
-                      <IoCheckmarkCircleOutline className="text-xl" />
-                    </span>
-                  </div>
-                  <div className="mt-2 h-1 overflow-hidden rounded-full bg-green-100">
-                    <div
-                      className="h-full rounded-full bg-green-500"
-                      style={{ width: `${answeredCount ? (correctCount / answeredCount) * 100 : 0}%` }}
-                    />
-                  </div>
-                </div>
-
-                <div className="rounded-xl border border-red-100 bg-red-50 p-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">
-                        Incorrect
-                      </p>
-                      <p className="mt-1 text-xl font-bold text-secondary">
-                        {incorrectCount}
-                      </p>
-                    </div>
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-500 text-white">
-                      <IoCloseCircleOutline className="text-xl" />
-                    </span>
-                  </div>
-                  <div className="mt-2 h-1 overflow-hidden rounded-full bg-red-100">
-                    <div
-                      className="h-full rounded-full bg-red-500"
-                      style={{ width: `${answeredCount ? (incorrectCount / answeredCount) * 100 : 0}%` }}
-                    />
-                  </div>
-                </div>
-
-                <div className="rounded-xl border border-blue-100 bg-[#EEF6FD] p-3">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-[10px] font-bold uppercase tracking-wide text-slate-500">
-                        Unanswered
-                      </p>
-                      <p className="mt-1 text-xl font-bold text-secondary">
-                        {unansweredCount}
-                      </p>
-                    </div>
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-secondary text-white">
-                      <IoHelpCircleOutline className="text-xl" />
-                    </span>
-                  </div>
-                  <div className="mt-2 h-1 overflow-hidden rounded-full bg-blue-100">
-                    <div
-                      className="h-full rounded-full bg-secondary"
-                      style={{ width: `${question.length ? (unansweredCount / question.length) * 100 : 0}%` }}
-                    />
-                  </div>
+                <div className="mt-2 flex justify-center border-t border-slate-100 pt-1">
+                  <ReactApexChart
+                    options={distributionOptions}
+                    series={[correctCount, incorrectCount, unansweredCount]}
+                    type="donut"
+                    height={205}
+                    width="100%"
+                  />
                 </div>
               </div>
+            </article>
+          </section>
 
-              <div className="mt-2 flex justify-center border-t border-slate-100 pt-1">
-                <ReactApexChart
-                  options={distributionOptions}
-                  series={[correctCount, incorrectCount, unansweredCount]}
-                  type="donut"
-                  height={205}
-                  width="100%"
-                />
-              </div>
-            </div>
-          </article>
-        </section>
-
-        <section
-          aria-label="Answer review"
-          className="grid min-h-0 grid-rows-[minmax(0,1fr)_auto] gap-2"
-        >
-          <ResultExplanationPreview
-            NegativeMarking={IsNegativeMark}
-            selectedOptions={selectedOptions}
-            question={question}
-          />
-          <div className="flex shrink-0 justify-end">
-            {/* <button
+          <section
+            aria-label="Answer review"
+            className="grid min-h-0 grid-rows-[minmax(0,1fr)_auto] gap-2"
+          >
+            <ResultExplanationPreview
+              NegativeMarking={IsNegativeMark}
+              selectedOptions={selectedOptions}
+              question={question}
+            />
+            <div className="flex shrink-0 justify-end">
+              {/* <button
             onClick={downloadCertificate}
             className="w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg text-green-100 bg-amber-500 text-sm sm:text-base font-medium"
           >
             Download Certificate
           </button> */}
 
-            {/* <button
+              {/* <button
             onClick={downloadPdf}
             className="w-full sm:w-auto px-4 py-3 sm:py-2 rounded-lg text-green-100 bg-green-500 text-sm sm:text-base font-medium"
           >
             Download Answers
           </button> */}
 
-            <button
-              className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-secondary px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-secondary-hover focus:outline-none focus:ring-4 focus:ring-blue-100 sm:w-auto"
-              onClick={() => {
-                dispatch(resetSelectedOptions());
-                navigate("/mcq", { replace: true });
-              }}
-            >
-              <IoExitOutline className="text-lg" />
-              Save & Exit
-            </button>
-          </div>
-        </section>
+              <button
+                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-secondary px-5 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-secondary-hover focus:outline-none focus:ring-4 focus:ring-blue-100 sm:w-auto"
+                onClick={() => {
+                  dispatch(resetSelectedOptions());
+                  navigate("/mcq", { replace: true });
+                }}
+              >
+                <IoExitOutline className="text-lg" />
+                Save & Exit
+              </button>
+            </div>
+          </section>
         </div>
       </div>
     </main>

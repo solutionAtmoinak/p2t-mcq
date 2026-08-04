@@ -8,7 +8,9 @@ const ModalComp2 = (props: ModalProps2) => {
             onClose={props.onClose}
             size={props.size ?? 'md'}
             keyboard={props.keyboard ?? false}
-            backdrop={false}
+            backdrop={props.backdrop ?? false}
+            className={props.className}
+            overflow={props.overflow}
         >
             <Modal.Header className='flex justify-between w-full'>
                 <Modal.Title className='font-bold text-secondary-active'>{props.title}</Modal.Title>
