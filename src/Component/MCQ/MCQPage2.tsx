@@ -74,8 +74,8 @@ const MCQPage2 = () => {
     } else {
       const data = convertData(mcqApi?.data?.result);
       if (data && data.length > 0) {
-        setMcqList(data[0]?.TblMasterMCQSet ?? []);
-        // console.log(data[0]?.TblMasterMCQSet ?? [])
+        const setData = data.find((d: any) => Number(d?.PackageId) === Number(selectedPackage?.PackageId));
+        setMcqList(setData?.TblMasterMCQSet || []);
       }
     }
   }, [mcqApi]);
@@ -92,6 +92,8 @@ const MCQPage2 = () => {
       }
     }
   }, [serviceApi]);
+
+
 
   const { state } = location;
 
@@ -147,7 +149,7 @@ const MCQPage2 = () => {
           <Header />
           <ExamTypeSelection options={serviceOptions} />
           <MyExams
-            mcqList={
+            setList={
               !!serviceOptions?.length
                 ? mcqList.filter(
                   (m) =>
@@ -357,12 +359,16 @@ const ExamTypeSelection = ({ options }: { options: InternalService[] }) => {
   );
 };
 
-const MyExams = ({ mcqList }: { mcqList: TblMasterMCQSet[] }) => {
+const MyExams = ({ setList }: { setList: TblMasterMCQSet[] }) => {
+
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { selectedInternalService, selectedMcqSet } = useSelector(
     (s: RootState) => s.detailed,
   );
+
+
   const [paperModal, setPaperModal] = useState<boolean>(false);
 
   function getExamMeta(e: TblMasterMCQSet) {
@@ -400,11 +406,11 @@ const MyExams = ({ mcqList }: { mcqList: TblMasterMCQSet[] }) => {
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-[#003B6B]">My Exams</h2>
         </div>
-        {mcqList.length === 0 && (
+        {setList.length === 0 && (
           <p className="text-secondary-active mt-4">No exam found</p>
         )}
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-5 sm:gap-6">
-          {mcqList.map((m) => {
+          {setList.map((m) => {
             const meta = getExamMeta(m);
 
             return (

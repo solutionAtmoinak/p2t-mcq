@@ -12,5 +12,5 @@ export default interface TblMasterMCQSection {
   IsRandomizedOption?: boolean;
   SectionTotalMarks?: number;
   DefaultMarks?: number;
-  TblMasterMCQQuestion?: TblMasterMCQQuestion[]
+  TblMasterMCQQuestion?: TblMasterMCQQuestion[];
 }
